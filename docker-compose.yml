@@ -1,0 +1,19 @@
+services:
+  # ============================================
+  # Frontend Service - Nginx
+  # Serves HTML, CSS, and compiled TypeScript
+  # ============================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: globify-frontend
+    ports:
+      - "8080:80"
+    networks:
+      - globify-network
+    restart: unless-stopped
+
+networks:
+  globify-network:
+    driver: bridge
