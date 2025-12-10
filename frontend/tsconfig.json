@@ -15,7 +15,11 @@
         "forceConsistentCasingInFileNames": true,
         "moduleResolution": "node",
         "declaration": false,
-        "sourceMap": true
+        "sourceMap": true,
+        "baseUrl": "./ts",
+        "paths": {
+            "@/*": ["*"] 
+        }
     },
     "include": [
         "ts/**/*"
