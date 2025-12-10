@@ -15,20 +15,22 @@ const routes: Record<string, () => HTMLElement | Promise<HTMLElement>> = {
 };
 
 export const render = async () => {
-    const app = document.getElementById("app");
-    if (!app) return;
-    app.innerHTML = "";
-    const path = window.location.pathname;
+    const viewContainer = document.getElementById("view-container");
+    if (!viewContainer) return;
 
+    // Clean only view container
+    viewContainer.innerHTML = "";
+
+    const path = window.location.pathname;
     const routeFunction = routes[path] || routes["/404"];
+
     try {
         const viewElement = await routeFunction();
-        app.appendChild(viewElement);
-
+        viewContainer.appendChild(viewElement);
     } catch (error) {
-        app.innerHTML = "<h1>Error crítico cargando la aplicación</h1>";
+        console.error("Error loading view:", error);
+        viewContainer.innerHTML = "<h1>Error cargando la página</h1>";
     }
-
 }
 
 export const navigateTo = (path: string) => {
