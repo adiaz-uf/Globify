@@ -1,5 +1,6 @@
+import { FeaturedPlayList } from "@/views/components/FeaturedPlaylists/index.js";
 export const HomePage = () => {
-    const h1 = document.createElement("h1");
-    h1.innerHTML = "HomePage"
-    return h1;
+    const div = document.createElement("div");
+    div.appendChild(FeaturedPlayList());
+    return div;
 }
