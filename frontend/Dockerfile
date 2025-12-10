@@ -27,7 +27,8 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy static files from builder
 COPY --from=builder /app/*.html /usr/share/nginx/html/
-COPY --from=builder /app/css /usr/share/nginx/html/css/
+COPY --from=builder /app/ts/styles /usr/share/nginx/html/styles/
+COPY --from=builder /app/assets /usr/share/nginx/html/assets/
 
 # Copy compiled JS if it exists, or create empty dir
 RUN mkdir -p /usr/share/nginx/html/js

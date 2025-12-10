@@ -15,18 +15,18 @@ const routes: Record<string, () => HTMLElement | Promise<HTMLElement>> = {
 };
 
 export const render = async () => {
-    const app = document.getElementById("app");
-    if (!app) return;
-    app.innerHTML = "";
+    const viewContainer = document.getElementById("view-container");
+    if (!viewContainer) return;
+    viewContainer.innerHTML = "";
     const path = window.location.pathname;
 
     const routeFunction = routes[path] || routes["/404"];
     try {
         const viewElement = await routeFunction();
-        app.appendChild(viewElement);
+        viewContainer.appendChild(viewElement);
 
     } catch (error) {
-        app.innerHTML = "<h1>Error crítico cargando la aplicación</h1>";
+        viewContainer.innerHTML = "<h1>Error crítico cargando la aplicación</h1>";
     }
 
 }

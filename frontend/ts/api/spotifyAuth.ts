@@ -1,5 +1,5 @@
-import { clientId, redirectUri, scopes } from '../config';
-import { fetchRequest } from './spotifyClient';
+import { clientId, redirectUri, scopes } from '../config.js';
+import { fetchRequest } from './spotifyClient.js';
 
 function generateRandomString(length: number): string {
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

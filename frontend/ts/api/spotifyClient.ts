@@ -1,4 +1,4 @@
-import { getAccessToken } from './spotifyAuth';
+import { getAccessToken } from './spotifyAuth.js';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
