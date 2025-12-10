@@ -5,13 +5,13 @@ const routes: Record<string, () => HTMLElement | Promise<HTMLElement>> = {
     "/": HomePage,
     "/404": NotFoundPage,
     "/playlist": async () => {
-        const module = await import("@/views/pages/PlaylistPage.js");
+        const module = await import("../views/pages/PlaylistPage.js");
         return module.PlaylistPage();
     },
     "/profile": async () => {
-        const module = await import("@/views/pages/ProfilePage.js")
+        const module = await import("../views/pages/ProfilePage.js")
         return module.ProfilePage();
-    }    
+    }
 };
 
 export const render = async () => {
