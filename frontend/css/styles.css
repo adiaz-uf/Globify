@@ -1,0 +1,88 @@
+:root {
+  /* ========================================= */
+  /* CONFIGURACIÓN DEL SUBJECT (GLOBIFY)       */
+  /* ========================================= */
+  
+  /* Requerimiento explícito: Breakpoint a 430px  */
+  --breakpoint-mobile: 430px; 
+
+  /* Dimensiones fijas para cumplir con "Fixed header/footer"  */
+  --header-height: 64px;      /* Altura de la cabecera fija */
+  --footer-height-mobile: 80px; /* Altura del footer con controles en móvil */
+  --player-height-desktop: 90px;
+
+  /* ========================================= */
+  /* PALETA DE COLORES (Strong Colors)         */
+  /* ========================================= */
+  /* Cumple con "Layout with strong colors"  */
+  
+  --green-main: #1ed760;        
+  --green-dark: #1db954;        
+  --bg-base: #000000;           
+  --bg-elevated-base: #121212;  
+  --bg-highlight: #1a1a1a;      
+  
+  --text-base: #FFFFFF;         
+  --text-subdued: #a7a7a7;      
+  --text-negative: #f15e6c;     
+
+  /* ========================================= */
+  /* TIPOGRAFÍA (Native CSS Only)              */
+  /* ========================================= */
+  /* "No external libraries". Usamos system fonts para evitar imports */
+  --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", 
+                 Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+
+  --text-xs: 0.6875rem;   
+  --text-sm: 0.8125rem;   
+  --text-md: 1rem;        
+  --text-lg: 1.5rem;      
+  --text-xl: 2rem;        
+  
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+
+  /* ========================================= */
+  /* ESPACIADO Y CAPAS                         */
+  /* ========================================= */
+  
+  --spacing-s: 8px;
+  --spacing-m: 16px;
+  --spacing-l: 24px;
+  --nav-width-desktop: 240px; 
+
+  /* Radius */
+  --border-radius-m: 8px;       
+  --border-radius-pill: 500px;  
+
+  /* Z-Index Strategy */
+  --z-sticky-header: 100;       
+  --z-mobile-menu: 200;    /* Nuevo: Para el menú overlay requerido  */
+  --z-player-bar: 300;     /* El player siempre visible */
+}
+
+/* ========================================= */
+/* RESET NATIVO (Sin librerías)    */
+/* ========================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-base);
+  font-family: var(--font-family);
+  font-size: var(--text-md);
+  
+  /* Evita el scroll en el body para manejarlo por áreas en layout fijo */
+  height: 100vh;
+  overflow: hidden; 
+}
+
+/* Estilos de Scrollbar (Opcional pero recomendado para estética) */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-thumb { background-color: #555; border-radius: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
