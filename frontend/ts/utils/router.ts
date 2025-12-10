@@ -1,5 +1,6 @@
 import { HomePage } from "../views/pages/HomePage.js";
 import { NotFoundPage } from "../views/pages/NotFoundPage.js";
+import { updateNavbarActiveState } from "../views/components/Navbar.js";
 
 const routes: Record<string, () => HTMLElement | Promise<HTMLElement>> = {
     "/": HomePage,
@@ -27,6 +28,8 @@ export const render = async () => {
     try {
         const viewElement = await routeFunction();
         viewContainer.appendChild(viewElement);
+        // Update navbar active state after rendering
+        updateNavbarActiveState();
     } catch (error) {
         console.error("Error loading view:", error);
         viewContainer.innerHTML = "<h1>Error cargando la página</h1>";

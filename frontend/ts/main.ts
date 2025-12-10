@@ -1,6 +1,8 @@
 console.log('🎵 Globify loaded!');
 
 import { redirectToSpotifyLogin, handleLoginCallback, isAuthenticated, logout } from './api/spotifyAuth.js';
+import { Navbar, updateNavbarActiveState } from './views/components/Navbar.js';
+import { Footer } from './views/components/Footer.js';
 
 async function initApp() {
     console.log('initApp called');
@@ -82,71 +84,27 @@ async function renderAuthenticatedApp() {
     console.log("User authenticated. Rendering app...");
 
     // Dynamically import router only when authenticated
-    const { render, navigateTo } = await import('./utils/router.js');
+    const { render } = await import('./utils/router.js');
 
-    // Get original HTML structure back
-    const app = document.getElementById('app');
-    if (!app) return;
-
-    app.innerHTML = `
-        <nav id="sidebar" class="sidebar">
-            <div class="logo">Globify</div>
-            <ul>
-                <li><a href="/" data-link>Home</a></li>
-                <li><a href="/search" data-link>Search</a></li>
-                <li><a href="/library" data-link>Your Library</a></li>
-            </ul>
-            <div id="playlists-list"></div>
-            <button id="logout-btn" style="
-                background: transparent;
-                color: #a7a7a7;
-                border: 1px solid #a7a7a7;
-                padding: 8px 16px;
-                border-radius: 500px;
-                margin: 16px;
-                cursor: pointer;
-            ">Logout</button>
-        </nav>
-
-        <main class="main-content">
-            <header class="top-bar">
-                <div class="navigation-arrows">
-                    <button>&lt;</button>
-                    <button>&gt;</button>
-                </div>
-                <div id="user-profile-pill">User</div>
-            </header>
-            <div id="view-container"></div>
-        </main>
-
-        <footer id="player-bar" class="player-bar">
-            <div class="now-playing"></div>
-            <div class="player-controls">
-                <button id="btn-prev">⏮</button>
-                <button id="btn-play-pause">▶</button>
-                <button id="btn-next">⏭</button>
-            </div>
-            <div class="volume-controls"></div>
-        </footer>
-    `;
-
-    // Set up logout button
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', logout);
+    // Insert Navbar component into container
+    const navbarContainer = document.getElementById('navbar-container');
+    if (navbarContainer) {
+        navbarContainer.innerHTML = '';
+        navbarContainer.appendChild(Navbar());
     }
 
-    // Set up navigation links
-    document.querySelectorAll('[data-link]').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const href = (e.target as HTMLAnchorElement).getAttribute('href');
-            if (href) navigateTo(href);
-        });
-    });
+    // Insert Footer/Player component into container
+    const footerContainer = document.getElementById('footer-container');
+    if (footerContainer) {
+        footerContainer.innerHTML = '';
+        footerContainer.appendChild(Footer());
+    }
 
-    // Handle browser back/forward buttons
-    window.addEventListener('popstate', render);
+    // Handle browser back/forward buttons and update navbar active state
+    window.addEventListener('popstate', () => {
+        render();
+        updateNavbarActiveState();
+    });
 
     // Render current route
     render();
