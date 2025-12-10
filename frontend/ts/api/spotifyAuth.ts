@@ -1,5 +1,5 @@
-import { clientId, redirectUri, scopes } from '../config';
-import { fetchRequest } from './spotifyClient';
+import { clientId, redirectUri, scopes } from '../config.js';
+import { fetchRequest } from './spotifyClient.js';
 
 function generateRandomString(length: number): string {
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -72,7 +72,7 @@ export async function handleLoginCallback(): Promise<string | null> {
         // Store tokens and expiration time
         localStorage.setItem('access_token', data.access_token);
         localStorage.setItem('refresh_token', data.refresh_token);
-        
+
         // data.expires_in is usually 3600 seconds
         const now = new Date().getTime();
         localStorage.setItem('token_expiry', (now + data.expires_in * 1000).toString());
