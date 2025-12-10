@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Globify</title>
-    <link rel="stylesheet" href="css/styles.css"> 
+    <link rel="stylesheet" href="css/styles.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "@/": "./js/" 
+        }
+    }
+    </script>
 </head>
-<body>
-    <header class="app-header">
-        <div class="header-content">
-            <div class="header-helper"></div>
-            <h1 class="game-title">Globify</h1>
-        </div>
-    </header>
 
-    <script src="js/main.js"></script>
+<body>
+    <div id="app"></div>
+    <script type="module" src="js/main.js"></script>
 </body>
+
 </html>
