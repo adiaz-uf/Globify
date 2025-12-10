@@ -5,10 +5,13 @@
     "scripts": {
         "build": "tsc",
         "watch": "tsc --watch",
-        "serve": "npx serve . -l 8080"
+        "serve": "npx serve . -l 8080",
+        "dev": "concurrently \"tsc --watch\" \"browser-sync start --server --files 'js/**/*.js, css/**/*.css, *.html' --host 127.0.0.1 --port 8080 --no-notify\""
     },
     "devDependencies": {
         "typescript": "^5.3.0",
-        "serve": "^14.2.0"
+        "serve": "^14.2.0",
+        "browser-sync": "^3.0.0",
+        "concurrently": "^8.2.0"
     }
 }
