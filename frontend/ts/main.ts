@@ -3,11 +3,12 @@ console.log('🎵 Globify loaded!');
 import { redirectToSpotifyLogin, handleLoginCallback, isAuthenticated } from './api/spotifyAuth';
 
 async function initApp() {
-    // 1. Are we returning from Spotify with a code?
+    // Manage spotify return (if there is ?code= in the url)
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('code')) {
         await handleLoginCallback();
-        // Reload or render the clean app
+        window.history.replaceState({}, document.title, "/");
+        // TODO: Reload or render the clean app
     }
 
     // 2. Are we authenticated?
