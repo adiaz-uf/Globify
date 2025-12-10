@@ -1,5 +1,4 @@
-console.log('🎵 Globify loaded!');
-
+import { navigateTo, render } from "@/utils/router.js";
 import { redirectToSpotifyLogin, handleLoginCallback, isAuthenticated, logout } from './api/spotifyAuth.js';
 import { Navbar, updateNavbarActiveState } from './views/components/Navbar.js';
 import { Footer } from './views/components/Footer.js';
@@ -23,6 +22,8 @@ async function initApp() {
     } else {
         renderAuthenticatedApp();
     }
+    // Temporary: always render without auth
+    render();
 }
 
 function renderLoginView() {

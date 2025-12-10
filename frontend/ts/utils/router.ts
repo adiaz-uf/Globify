@@ -1,6 +1,6 @@
-import { HomePage } from "../views/pages/HomePage.js";
-import { NotFoundPage } from "../views/pages/NotFoundPage.js";
-import { updateNavbarActiveState } from "../views/components/Navbar.js";
+import { updateNavbarActiveState } from "@/views/components/Navbar.js";
+import { HomePage } from "@/views/pages/HomePage.js";
+import { NotFoundPage } from "@/views/pages/NotFoundPage.js";
 
 const routes: Record<string, () => HTMLElement | Promise<HTMLElement>> = {
     "/": HomePage,
@@ -16,23 +16,24 @@ const routes: Record<string, () => HTMLElement | Promise<HTMLElement>> = {
 };
 
 export const render = async () => {
-    const viewContainer = document.getElementById("view-container");
-    if (!viewContainer) return;
-
-    // Clean only view container
-    viewContainer.innerHTML = "";
-
     const path = window.location.pathname;
-    const routeFunction = routes[path] || routes["/404"];
+    const isNotFound = !routes[path];
+
+    // For 404, render in #app (full screen). For other pages, render in #view-container
+    const targetId = isNotFound ? "app" : "view-container";
+    const container = document.getElementById(targetId);
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    const routeFunction = isNotFound ? NotFoundPage : routes[path];
 
     try {
         const viewElement = await routeFunction();
-        viewContainer.appendChild(viewElement);
-        // Update navbar active state after rendering
-        updateNavbarActiveState();
+        container.appendChild(viewElement);
+        updateNavbarActiveState()
     } catch (error) {
-        console.error("Error loading view:", error);
-        viewContainer.innerHTML = "<h1>Error cargando la página</h1>";
+        container.innerHTML = "<h1>Error crítico cargando la aplicación</h1>";
     }
 }
 
