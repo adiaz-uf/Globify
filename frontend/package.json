@@ -1,0 +1,14 @@
+{
+    "name": "globify-frontend",
+    "version": "1.0.0",
+    "description": "Globify - Spotify Client",
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc --watch",
+        "serve": "npx serve . -l 8080"
+    },
+    "devDependencies": {
+        "typescript": "^5.3.0",
+        "serve": "^14.2.0"
+    }
+}
