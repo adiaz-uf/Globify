@@ -15,20 +15,24 @@ const routes: Record<string, () => HTMLElement | Promise<HTMLElement>> = {
 };
 
 export const render = async () => {
-    const viewContainer = document.getElementById("view-container");
-    if (!viewContainer) return;
-    viewContainer.innerHTML = "";
     const path = window.location.pathname;
+    const isNotFound = !routes[path];
 
-    const routeFunction = routes[path] || routes["/404"];
+    // For 404, render in #app (full screen). For other pages, render in #view-container
+    const targetId = isNotFound ? "app" : "view-container";
+    const container = document.getElementById(targetId);
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    const routeFunction = isNotFound ? NotFoundPage : routes[path];
+
     try {
         const viewElement = await routeFunction();
-        viewContainer.appendChild(viewElement);
-
+        container.appendChild(viewElement);
     } catch (error) {
-        viewContainer.innerHTML = "<h1>Error crítico cargando la aplicación</h1>";
+        container.innerHTML = "<h1>Error crítico cargando la aplicación</h1>";
     }
-
 }
 
 export const navigateTo = (path: string) => {

@@ -1,11 +1,19 @@
 export const NotFoundPage = (): HTMLElement => {
     const container = document.createElement("div");
-    container.classList.add("error-page");     
+    container.classList.add("error-page");
     container.innerHTML = `
-        <h1>404</h1>
-        <p>Ups, parece que te has perdido.</p>
-        <a href="/" data-link>Volver al inicio</a>
+        <div class="error-content">
+            <div class="error-icon">
+                <img src="/assets/icons/spotify.svg" alt="Spotify Logo">
+            </div>
+            <h2>Página no encontrada</h2>
+            <p>La página que buscas no existe o ha sido movida.</p>
+            <a href="/" class="btn-home" data-link>
+                <span class="icon-home"></span>
+                Volver al inicio
+            </a>
+        </div>
     `;
-    
+
     return container;
 };

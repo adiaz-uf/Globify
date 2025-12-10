@@ -17,7 +17,7 @@ export const FeaturedPlayList = () => {
     featuredPlayList.classList.add('featured-playlists');
 
     const title = document.createElement('h2');
-    title.textContent = 'Featured Playlists';
+    title.textContent = 'Destacados';
     featuredPlayList.appendChild(title);
 
     const grid = document.createElement('div');
