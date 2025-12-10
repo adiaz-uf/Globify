@@ -5,19 +5,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Globify</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <script type="importmap">
-    {
-        "imports": {
-            "@/": "./js/" 
-        }
-    }
-    </script>
-</head>
-
+    <link rel="stylesheet" href="/styles/styles.css">
+    </head>
 <body>
-    <div id="app"></div>
-    <script type="module" src="js/main.js"></script>
+    <div id="app">
+        <nav id="sidebar" class="sidebar">
+            <div class="logo">Globify</div>
+            <ul>
+                <li><a href="/" data-link>Home</a></li>
+                <li><a href="/search" data-link>Search</a></li>
+                <li><a href="/library" data-link>Your Library</a></li>
+            </ul>
+            <div id="playlists-list">
+                </div>
+        </nav>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="navigation-arrows">
+                    <button>&lt;</button>
+                    <button>&gt;</button>
+                </div>
+                <div id="user-profile-pill">
+                    Loading...
+                </div>
+            </header>
+
+            <div id="view-container"></div>
+        </main>
+
+        <footer id="player-bar" class="player-bar">
+            <div class="now-playing">
+                </div>
+            <div class="player-controls">
+                <button id="btn-prev">⏮</button>
+                <button id="btn-play-pause">▶</button>
+                <button id="btn-next">⏭</button>
+            </div>
+            <div class="volume-controls">
+                </div>
+        </footer>
+    </div>
+
+    <script type="module" src="/ts/main.ts"></script>
 </body>
 
 </html>
