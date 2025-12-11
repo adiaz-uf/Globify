@@ -35,7 +35,6 @@ export function getDominantColor(imgElement: HTMLImageElement): Promise<string> 
                 g = Math.round(g / pixelCount);
                 b = Math.round(b / pixelCount);
 
-                console.log(`🎨 Extracted color: rgb(${r}, ${g}, ${b})`);
                 resolve(`rgba(${r}, ${g}, ${b}, 0.4)`);
             } catch (error) {
                 // CORS error - use fallback color
