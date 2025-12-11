@@ -53,8 +53,10 @@ export const ProfilePage = async () => {
 
     // Fetch user data from Spotify API with error handling
     let userData: any = null;
+    let listData: any = null;
     try {
         userData = await spotifyApiCall<any>(SpotifyEndpoints.currentUser, 'GET');
+        listData = await spotifyApiCall<any>(SpotifyEndpoints.myPlaylists, 'GET');
         console.log('User data:', userData);
     } catch (error) {
         console.error('Error fetching user profile:', error);
@@ -71,9 +73,9 @@ export const ProfilePage = async () => {
     statsRow.classList.add('profile-stats');
 
     const stats = [
-        { value: '12', label: 'Playlists públicas' },
-        { value: '234', label: 'Seguidores' },
-        { value: '156', label: 'Siguiendo' }
+        { value: listData.items.length, label: 'Playlists públicas' },
+        { value: userData.followers.total !== 0 ? userData.followers.total : '',
+        label: userData.followers.total !== 0 ? userData.followers.total : '' },
     ];
 
     stats.forEach((stat, index) => {
@@ -81,13 +83,6 @@ export const ProfilePage = async () => {
         statItem.classList.add('stat-item');
         statItem.innerHTML = `<strong>${stat.value}</strong> ${stat.label}`;
         statsRow.appendChild(statItem);
-
-        if (index < stats.length - 1) {
-            const dot = document.createElement('span');
-            dot.classList.add('stat-separator');
-            dot.textContent = '•';
-            statsRow.appendChild(dot);
-        }
     });
 
     profileInfo.appendChild(statsRow);
