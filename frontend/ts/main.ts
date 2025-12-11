@@ -96,7 +96,7 @@ async function renderAuthenticatedApp() {
     const footerContainer = document.getElementById('footer-container');
     if (footerContainer) {
         footerContainer.innerHTML = '';
-        footerContainer.appendChild(Footer());
+        footerContainer.appendChild(await Footer());
     }
 
     // Handle browser back/forward buttons and update navbar active state

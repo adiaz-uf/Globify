@@ -1,3 +1,6 @@
+import { SpotifyEndpoints } from "@/api/endpoints.js";
+import { spotifyApiCall } from "@/api/spotifyClient.js";
+
 // SVG Icons for player controls
 const icons = {
     shuffle: `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M13.151.922a.75.75 0 1 0-1.06 1.06L13.109 3H11.16a3.75 3.75 0 0 0-2.873 1.34l-6.173 7.356A2.25 2.25 0 0 1 .39 12.5H0V14h.391a3.75 3.75 0 0 0 2.873-1.34l6.173-7.356a2.25 2.25 0 0 1 1.724-.804h1.947l-1.017 1.018a.75.75 0 0 0 1.06 1.06l2.306-2.306a.75.75 0 0 0 0-1.06L13.15.922zM.391 3.5H0V2h.391c1.109 0 2.16.49 2.873 1.34L4.89 5.277l-.979 1.167-1.796-2.14A2.25 2.25 0 0 0 .39 3.5z"/><path d="m7.5 10.723.98-1.167 1.795 2.14a2.25 2.25 0 0 0 1.724.804h1.947l-1.017-1.018a.75.75 0 1 1 1.06-1.06l2.306 2.306a.75.75 0 0 1 0 1.06l-2.306 2.306a.75.75 0 1 1-1.06-1.06l1.018-1.018H11.16a3.75 3.75 0 0 1-2.873-1.34l-1.787-2.13z"/></svg>`,
@@ -116,10 +119,45 @@ const updatePlayerUI = () => {
     }
 };
 
-export const Footer = (): HTMLElement => {
+export const Footer = async (): Promise<HTMLElement> => {
     const footer = document.createElement("footer");
     footer.id = "player-bar";
     footer.className = "player-bar";
+
+    // Default placeholder cover (Spotify-like gray vinyl)
+    const defaultCover = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect fill='%23282828' width='80' height='80'/%3E%3Ccircle cx='40' cy='40' r='30' fill='%23181818'/%3E%3Ccircle cx='40' cy='40' r='8' fill='%23282828'/%3E%3Ccircle cx='40' cy='40' r='4' fill='%23181818'/%3E%3C/svg%3E";
+
+    // ========== FETCH PLAYER STATE ==========
+    let playerData: any = null;
+    try {
+        playerData = await spotifyApiCall<any>(SpotifyEndpoints.playerState, 'GET');
+        console.log('player data:', playerData);
+    } catch (error) {
+        console.error('Error fetching player data:', error);
+        // Continue rendering with fallback data
+    }
+
+    // Extract data from Spotify response
+    const currentTrack = playerData?.item;
+    const isPlaying = playerData?.is_playing || false;
+    const progressMs = playerData?.progress_ms || 0;
+    const durationMs = currentTrack?.duration_ms || 0;
+
+    // Get track info
+    const trackName = currentTrack?.name || '';
+    const artistName = currentTrack?.artists?.map((a: any) => a.name).join(', ') || '';
+    const albumCover = currentTrack?.album?.images?.[0]?.url || defaultCover;
+
+    // Update player state
+    playerState.isPlaying = isPlaying;
+    playerState.currentTime = Math.floor(progressMs / 1000);
+    playerState.duration = Math.floor(durationMs / 1000);
+    playerState.currentTrack = currentTrack ? {
+        title: trackName,
+        artist: artistName,
+        album: currentTrack?.album?.name || '',
+        coverUrl: albumCover
+    } : null;
 
     // ========== LEFT SECTION - Now Playing ==========
     const leftSection = document.createElement("div");
@@ -131,8 +169,8 @@ export const Footer = (): HTMLElement => {
     const trackCover = document.createElement("img");
     trackCover.id = "player-track-cover";
     trackCover.className = "track-cover";
-    trackCover.src = ""; // Placeholder
-    trackCover.alt = "Album cover";
+    trackCover.src = albumCover;
+    trackCover.alt = currentTrack ? `${trackName} - ${artistName}` : "No track playing";
 
     const trackInfo = document.createElement("div");
     trackInfo.className = "track-info";
@@ -140,12 +178,12 @@ export const Footer = (): HTMLElement => {
     const trackTitle = document.createElement("span");
     trackTitle.id = "player-track-title";
     trackTitle.className = "track-title";
-    trackTitle.textContent = "No track playing";
+    trackTitle.textContent = trackName || "Elige una canción";
 
     const trackArtist = document.createElement("span");
     trackArtist.id = "player-track-artist";
     trackArtist.className = "track-artist";
-    trackArtist.textContent = "";
+    trackArtist.textContent = artistName;
 
     trackInfo.appendChild(trackTitle);
     trackInfo.appendChild(trackArtist);
@@ -180,7 +218,7 @@ export const Footer = (): HTMLElement => {
     const playPauseBtn = document.createElement("button");
     playPauseBtn.id = "player-play-pause";
     playPauseBtn.className = "control-btn control-btn-play";
-    playPauseBtn.innerHTML = icons.play;
+    playPauseBtn.innerHTML = isPlaying ? icons.pause : icons.play;
     playPauseBtn.addEventListener("click", () => {
         playerState.isPlaying = !playerState.isPlaying;
         updatePlayerUI();
@@ -214,10 +252,10 @@ export const Footer = (): HTMLElement => {
     const progressContainer = document.createElement("div");
     progressContainer.className = "progress-container";
 
-    const currentTime = document.createElement("span");
-    currentTime.id = "player-current-time";
-    currentTime.className = "time-display";
-    currentTime.textContent = "0:00";
+    const currentTimeEl = document.createElement("span");
+    currentTimeEl.id = "player-current-time";
+    currentTimeEl.className = "time-display";
+    currentTimeEl.textContent = formatTime(playerState.currentTime);
 
     const progressBar = document.createElement("input");
     progressBar.type = "range";
@@ -225,21 +263,25 @@ export const Footer = (): HTMLElement => {
     progressBar.className = "progress-bar";
     progressBar.min = "0";
     progressBar.max = "100";
-    progressBar.value = "0";
+    // Calculate initial progress percentage
+    const progressPercent = playerState.duration > 0
+        ? (playerState.currentTime / playerState.duration) * 100
+        : 0;
+    progressBar.value = String(progressPercent);
     progressBar.addEventListener("input", (e) => {
         const value = Number((e.target as HTMLInputElement).value);
         const seekTime = (value / 100) * playerState.duration;
         onSeek?.(seekTime);
     });
 
-    const duration = document.createElement("span");
-    duration.id = "player-duration";
-    duration.className = "time-display";
-    duration.textContent = "0:00";
+    const durationEl = document.createElement("span");
+    durationEl.id = "player-duration";
+    durationEl.className = "time-display";
+    durationEl.textContent = formatTime(playerState.duration);
 
-    progressContainer.appendChild(currentTime);
+    progressContainer.appendChild(currentTimeEl);
     progressContainer.appendChild(progressBar);
-    progressContainer.appendChild(duration);
+    progressContainer.appendChild(durationEl);
 
     centerSection.appendChild(controls);
     centerSection.appendChild(progressContainer);

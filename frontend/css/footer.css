@@ -78,11 +78,6 @@
     max-width: 200px;
 }
 
-.track-title:hover {
-    text-decoration: underline;
-    cursor: pointer;
-}
-
 .track-artist {
     color: var(--text-subdued);
     font-size: var(--text-xs);

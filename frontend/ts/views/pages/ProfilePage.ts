@@ -201,8 +201,8 @@ function createSection(title: string, items: { name: string; type: string; image
                 <path d="M8 5v14l11-7z"/>
             </svg>
         `;
-        imageContainer.appendChild(playBtn);
         card.appendChild(imageContainer);
+        card.appendChild(playBtn);
 
         const itemInfo = document.createElement('div');
         itemInfo.classList.add('item-info');
