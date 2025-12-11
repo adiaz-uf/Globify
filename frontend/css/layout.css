@@ -1,6 +1,6 @@
 .featured-playlists {
     padding: var(--spacing-l);
-    background: linear-gradient(to bottom, rgba(232, 232, 232, 0.4) 0%, #121212 70%)
+    background: linear-gradient(to bottom, rgba(92, 92, 92, 0.7) 0%, #121212 70%)
 }
 
 .featured-playlists h2 {

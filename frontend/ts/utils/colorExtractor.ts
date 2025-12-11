@@ -1,7 +1,3 @@
-/**
- * Extracts the dominant color from an image using Canvas API
- * No external dependencies required - runs in browser
- */
 export function getDominantColor(imgElement: HTMLImageElement): Promise<string> {
     return new Promise((resolve) => {
         const canvas = document.createElement('canvas');
@@ -52,11 +48,7 @@ export function getDominantColor(imgElement: HTMLImageElement): Promise<string> 
     });
 }
 
-/**
- * Applies color glow effect to a container when hovering on a card
- * @param card - The playlist card element
- * @param container - The container to apply the glow effect to
- */
+
 export function applyColorGlow(card: HTMLElement, container: HTMLElement): void {
     const img = card.querySelector('img') as HTMLImageElement;
     if (!img) {
@@ -65,7 +57,6 @@ export function applyColorGlow(card: HTMLElement, container: HTMLElement): void 
     }
 
     getDominantColor(img).then(color => {
-        // Create gradient with the dominant color
         const gradient = `linear-gradient(to bottom, ${color} 0%, #121212 70%)`;
 
         card.addEventListener('mouseenter', () => {
