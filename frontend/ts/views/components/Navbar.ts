@@ -1,4 +1,6 @@
 import { navigateTo } from "../../utils/router.js";
+import { spotifyApiCall } from "../../api/spotifyClient.js";
+import { SpotifyEndpoints } from "../../api/endpoints.js";
 
 interface NavItem {
     label: string;
@@ -22,10 +24,49 @@ const icons = {
 // Home nav item only
 const homeNavItem: NavItem = { label: "", href: "/", icon: icons.home, iconActive: icons.homeFilled };
 
-// Right navigation items (Profile)
-const rightNavItems: NavItem[] = [
-    { label: "", href: "/profile", icon: icons.profile, iconActive: icons.profileFilled },
-];
+// Cache for user data
+let cachedUserData: { displayName: string; imageUrl: string | null } | null = null;
+
+// Function to fetch and cache user data
+async function fetchUserData(): Promise<{ displayName: string; imageUrl: string | null }> {
+    if (cachedUserData) {
+        return cachedUserData;
+    }
+
+    try {
+        const userData = await spotifyApiCall<any>(SpotifyEndpoints.currentUser, 'GET');
+        cachedUserData = {
+            displayName: userData.display_name || 'Usuario',
+            imageUrl: userData.images?.[0]?.url || null
+        };
+        return cachedUserData;
+    } catch (error) {
+        console.error('Error fetching user data for navbar:', error);
+        return { displayName: 'Usuario', imageUrl: null };
+    }
+}
+
+// Create profile avatar element
+function createProfileAvatar(displayName: string, imageUrl: string | null): HTMLElement {
+    const avatarContainer = document.createElement('div');
+    avatarContainer.className = 'nav-profile-avatar';
+    avatarContainer.id = 'nav-profile-avatar';
+
+    if (imageUrl) {
+        // Use profile image if available
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = displayName;
+        img.className = 'nav-avatar-img';
+        avatarContainer.appendChild(img);
+    } else {
+        // Use first letter of display name
+        const initial = displayName.charAt(0).toUpperCase();
+        avatarContainer.textContent = initial;
+    }
+
+    return avatarContainer;
+}
 
 const createNavLink = (item: NavItem): HTMLElement => {
     const li = document.createElement("li");
@@ -150,41 +191,62 @@ export const Navbar = (): HTMLElement => {
 
     nav.appendChild(centerSection);
 
-    // Right section - Profile
+    // Right section - Profile Avatar
     const rightSection = document.createElement("div");
     rightSection.className = "nav-section nav-right";
 
-    const rightUl = document.createElement("ul");
-    rightNavItems.forEach(item => {
-        rightUl.appendChild(createNavLink(item));
+    // Create profile link with avatar
+    const profileLink = document.createElement("a");
+    profileLink.href = "/profile";
+    profileLink.className = "nav-profile-link";
+    profileLink.setAttribute("data-link", "");
+
+    // Initial placeholder avatar
+    const placeholderAvatar = createProfileAvatar("?", null);
+    profileLink.appendChild(placeholderAvatar);
+
+    profileLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        navigateTo("/profile");
     });
-    rightSection.appendChild(rightUl);
+
+    rightSection.appendChild(profileLink);
     nav.appendChild(rightSection);
+
+    // Fetch user data and update avatar asynchronously
+    fetchUserData().then(userData => {
+        const avatarContainer = profileLink.querySelector('.nav-profile-avatar');
+        if (avatarContainer) {
+            const newAvatar = createProfileAvatar(userData.displayName, userData.imageUrl);
+            avatarContainer.replaceWith(newAvatar);
+        }
+    });
 
     return nav;
 };
 
 export const updateNavbarActiveState = (): void => {
-    const allNavItems = [homeNavItem, ...rightNavItems];
+    // Update home link active state
+    const homeLink = document.querySelector("#global-nav-bar a[href='/']");
+    const profileLink = document.querySelector("#global-nav-bar .nav-profile-link");
 
-    const links = document.querySelectorAll("#global-nav-bar a[data-link]");
-    links.forEach(link => {
-        const href = link.getAttribute("href");
-        const isActive = href === window.location.pathname;
-        const navItem = allNavItems.find(item => item.href === href);
+    if (homeLink) {
+        const isHomeActive = window.location.pathname === "/";
+        homeLink.classList.toggle("active", isHomeActive);
 
-        link.classList.remove("active");
-
-        if (isActive) {
-            link.classList.add("active");
+        const iconSpan = homeLink.querySelector(".nav-icon");
+        if (iconSpan) {
+            iconSpan.innerHTML = isHomeActive ? icons.homeFilled : icons.home;
         }
+    }
 
-        // Update icon if navItem has iconActive
-        if (navItem) {
-            const iconSpan = link.querySelector(".nav-icon");
-            if (iconSpan) {
-                iconSpan.innerHTML = isActive && navItem.iconActive ? navItem.iconActive : navItem.icon;
-            }
-        }
-    });
+    if (profileLink) {
+        const isProfileActive = window.location.pathname === "/profile";
+        profileLink.classList.toggle("active", isProfileActive);
+    }
+};
+
+// Function to clear user cache (useful when logging out)
+export const clearUserCache = (): void => {
+    cachedUserData = null;
 };
