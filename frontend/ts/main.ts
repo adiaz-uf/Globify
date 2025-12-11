@@ -22,8 +22,6 @@ async function initApp() {
     } else {
         renderAuthenticatedApp();
     }
-    // Temporary: always render without auth
-    render();
 }
 
 function renderLoginView() {
