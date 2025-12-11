@@ -1,4 +1,5 @@
 import { PlaylistCard } from "@/views/components/FeaturedPlaylists/PlaylistCard.js";
+import { applyColorGlow } from "@/utils/colorExtractor.js";
 
 // Sample data for testing
 const samplePlaylists = [
@@ -24,7 +25,10 @@ export const FeaturedPlayList = () => {
     grid.classList.add('playlist-grid');
 
     samplePlaylists.forEach(playlist => {
-        grid.appendChild(PlaylistCard(playlist.img, playlist.title));
+        const card = PlaylistCard(playlist.img, playlist.title);
+        grid.appendChild(card);
+        // Apply color glow effect - pass container as second param
+        applyColorGlow(card, featuredPlayList);
     });
 
     featuredPlayList.appendChild(grid);
