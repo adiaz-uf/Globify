@@ -158,18 +158,196 @@ export const Navbar = (): HTMLElement => {
     searchInput.id = "nav-search-input";
     searchInput.className = "search-input";
     searchInput.placeholder = "¿Qué quieres escuchar?";
+    searchInput.autocomplete = "off";
+    searchInput.setAttribute("autocapitalize", "off");
+    searchInput.setAttribute("autocorrect", "off");
+    searchInput.setAttribute("spellcheck", "false");
+
+    // Search dropdown for live results
+    const searchDropdown = document.createElement("div");
+    searchDropdown.className = "search-dropdown";
+    searchDropdown.id = "search-dropdown";
+
+    // Debounce timer
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
     // Function to perform search
     const performSearch = () => {
         const query = searchInput.value.trim();
         if (query) {
+            hideSearchDropdown();
             navigateTo(`/search?q=${encodeURIComponent(query)}`);
         }
     };
 
-    // Handle search input
+    // Function to show dropdown
+    const showSearchDropdown = () => {
+        searchDropdown.classList.add('active');
+    };
+
+    // Function to hide dropdown
+    const hideSearchDropdown = () => {
+        searchDropdown.classList.remove('active');
+    };
+
+    // Function to render dropdown results
+    const renderDropdownResults = (results: any) => {
+        searchDropdown.innerHTML = '';
+
+        const hasResults = results.tracks?.items?.length ||
+            results.artists?.items?.length ||
+            results.albums?.items?.length;
+
+        if (!hasResults) {
+            const noResults = document.createElement('div');
+            noResults.className = 'search-dropdown-section';
+            noResults.innerHTML = '<span class="search-dropdown-item-subtitle">No se encontraron resultados</span>';
+            searchDropdown.appendChild(noResults);
+            showSearchDropdown();
+            return;
+        }
+
+        const defaultCover = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect fill='%23282828' width='80' height='80'/%3E%3Ccircle cx='40' cy='40' r='20' fill='%23535353'/%3E%3C/svg%3E";
+
+        // Tracks section
+        if (results.tracks?.items?.length) {
+            const section = document.createElement('div');
+            section.className = 'search-dropdown-section';
+
+            const title = document.createElement('div');
+            title.className = 'search-dropdown-section-title';
+            title.textContent = 'Canciones';
+            section.appendChild(title);
+
+            results.tracks.items.slice(0, 3).forEach((track: any) => {
+                const item = document.createElement('div');
+                item.className = 'search-dropdown-item';
+
+                const img = document.createElement('img');
+                img.className = 'search-dropdown-item-image';
+                img.src = track.album?.images?.[2]?.url || track.album?.images?.[0]?.url || defaultCover;
+                img.alt = track.name;
+                item.appendChild(img);
+
+                const info = document.createElement('div');
+                info.className = 'search-dropdown-item-info';
+
+                const name = document.createElement('span');
+                name.className = 'search-dropdown-item-name';
+                name.textContent = track.name;
+                info.appendChild(name);
+
+                const subtitle = document.createElement('span');
+                subtitle.className = 'search-dropdown-item-subtitle';
+                subtitle.textContent = `Canción • ${track.artists?.map((a: any) => a.name).join(', ')}`;
+                info.appendChild(subtitle);
+
+                item.appendChild(info);
+
+                item.addEventListener('click', () => {
+                    hideSearchDropdown();
+                    // Could play track or navigate to album
+                    console.log('Selected track:', track.id);
+                });
+
+                section.appendChild(item);
+            });
+
+            searchDropdown.appendChild(section);
+        }
+
+        // Artists section
+        if (results.artists?.items?.length) {
+            const section = document.createElement('div');
+            section.className = 'search-dropdown-section';
+
+            const title = document.createElement('div');
+            title.className = 'search-dropdown-section-title';
+            title.textContent = 'Artistas';
+            section.appendChild(title);
+
+            results.artists.items.slice(0, 2).forEach((artist: any) => {
+                const item = document.createElement('div');
+                item.className = 'search-dropdown-item';
+
+                const img = document.createElement('img');
+                img.className = 'search-dropdown-item-image round';
+                img.src = artist.images?.[2]?.url || artist.images?.[0]?.url || defaultCover;
+                img.alt = artist.name;
+                item.appendChild(img);
+
+                const info = document.createElement('div');
+                info.className = 'search-dropdown-item-info';
+
+                const name = document.createElement('span');
+                name.className = 'search-dropdown-item-name';
+                name.textContent = artist.name;
+                info.appendChild(name);
+
+                const subtitle = document.createElement('span');
+                subtitle.className = 'search-dropdown-item-subtitle';
+                subtitle.textContent = 'Artista';
+                info.appendChild(subtitle);
+
+                item.appendChild(info);
+
+                item.addEventListener('click', () => {
+                    hideSearchDropdown();
+                    console.log('Selected artist:', artist.id);
+                });
+
+                section.appendChild(item);
+            });
+
+            searchDropdown.appendChild(section);
+        }
+
+        // View all results link
+        const footer = document.createElement('div');
+        footer.className = 'search-dropdown-footer';
+
+        const viewAll = document.createElement('span');
+        viewAll.className = 'search-dropdown-view-all';
+        viewAll.textContent = 'Ver todos los resultados';
+        viewAll.addEventListener('click', performSearch);
+        footer.appendChild(viewAll);
+
+        searchDropdown.appendChild(footer);
+        showSearchDropdown();
+    };
+
+    // Live search function
+    const liveSearch = async (query: string) => {
+        if (!query.trim()) {
+            hideSearchDropdown();
+            return;
+        }
+
+        try {
+            const searchUrl = `${SpotifyEndpoints.search}?q=${encodeURIComponent(query)}&type=track,artist&limit=5`;
+            const results = await spotifyApiCall<any>(searchUrl, 'GET');
+            renderDropdownResults(results);
+        } catch (error) {
+            console.error('Live search error:', error);
+            hideSearchDropdown();
+        }
+    };
+
+    // Handle search input with debounce
     searchInput.addEventListener("input", (e) => {
         const query = (e.target as HTMLInputElement).value;
+
+        // Clear previous timer
+        if (debounceTimer) {
+            clearTimeout(debounceTimer);
+        }
+
+        // Set new timer (300ms debounce)
+        debounceTimer = setTimeout(() => {
+            liveSearch(query);
+        }, 300);
+
+        // Also call external callback if set
         if (searchCallback) {
             searchCallback(query);
         }
@@ -178,15 +356,36 @@ export const Navbar = (): HTMLElement => {
     // Handle Enter key
     searchInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
+            if (debounceTimer) {
+                clearTimeout(debounceTimer);
+            }
             performSearch();
+        } else if (e.key === "Escape") {
+            hideSearchDropdown();
         }
     });
 
     // Handle search button click
     searchButton.addEventListener("click", performSearch);
 
+    // Handle focus/blur for dropdown
+    searchInput.addEventListener("focus", () => {
+        const query = searchInput.value.trim();
+        if (query && searchDropdown.children.length > 0) {
+            showSearchDropdown();
+        }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+        if (!searchContainer.contains(e.target as Node)) {
+            hideSearchDropdown();
+        }
+    });
+
     searchContainer.appendChild(searchButton);
     searchContainer.appendChild(searchInput);
+    searchContainer.appendChild(searchDropdown);
     centerSection.appendChild(searchContainer);
 
     nav.appendChild(centerSection);

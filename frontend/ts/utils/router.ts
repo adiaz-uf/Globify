@@ -5,6 +5,10 @@ import { NotFoundPage } from "@/views/pages/NotFoundPage.js";
 const routes: Record<string, () => HTMLElement | Promise<HTMLElement>> = {
     "/": HomePage,
     "/404": NotFoundPage,
+    "/search": async () => {
+        const module = await import("@/views/pages/SearchPage.js");
+        return module.SearchPage();
+    },
     "/playlist": async () => {
         const module = await import("@/views/pages/PlaylistPage.js");
         return module.PlaylistPage();

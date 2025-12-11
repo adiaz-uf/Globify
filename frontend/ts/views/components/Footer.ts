@@ -14,6 +14,56 @@ const icons = {
     queue: `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M15 15H1v-1.5h14V15zm0-4.5H1V9h14v1.5zm-14-7A2.5 2.5 0 0 1 3.5 1h9a2.5 2.5 0 0 1 0 5h-9A2.5 2.5 0 0 1 1 3.5zm2.5-1a1 1 0 0 0 0 2h9a1 1 0 1 0 0-2h-9z"/></svg>`,
     devices: `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M6 2.75C6 1.784 6.784 1 7.75 1h6.5c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 14.25 15h-6.5A1.75 1.75 0 0 1 6 13.25V2.75zm1.75-.25a.25.25 0 0 0-.25.25v10.5c0 .138.112.25.25.25h6.5a.25.25 0 0 0 .25-.25V2.75a.25.25 0 0 0-.25-.25h-6.5zm-6 0a.25.25 0 0 0-.25.25v6.5c0 .138.112.25.25.25H4V11H1.75A1.75 1.75 0 0 1 0 9.25v-6.5C0 1.784.784 1 1.75 1H4v1.5H1.75zM4 15H1.75A1.75 1.75 0 0 1 0 13.25V12h4v1.5H1.75a.25.25 0 0 0-.25.25V14c0 .138.112.25.25.25H4V15z"/></svg>`,
     fullscreen: `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M6.53 9.47a.75.75 0 0 1 0 1.06l-2.72 2.72h1.018a.75.75 0 0 1 0 1.5H1.25v-3.579a.75.75 0 0 1 1.5 0v1.018l2.72-2.72a.75.75 0 0 1 1.06 0zm2.94-2.94a.75.75 0 0 1 0-1.06l2.72-2.72h-1.018a.75.75 0 1 1 0-1.5h3.578v3.579a.75.75 0 0 1-1.5 0V3.81l-2.72 2.72a.75.75 0 0 1-1.06 0z"/></svg>`,
+    heart: `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M1.69 2A4.582 4.582 0 0 1 8 2.023 4.583 4.583 0 0 1 11.88.817h.002a4.618 4.618 0 0 1 3.782 3.65v.003a4.543 4.543 0 0 1-1.011 3.84L9.35 14.629a1.765 1.765 0 0 1-2.093.464 1.762 1.762 0 0 1-.605-.463L1.348 8.309A4.582 4.582 0 0 1 1.689 2zm3.158.252A3.082 3.082 0 0 0 2.49 7.337l.005.005L7.8 13.664a.264.264 0 0 0 .311.069.262.262 0 0 0 .09-.069l5.312-6.33a3.043 3.043 0 0 0 .68-2.573 3.118 3.118 0 0 0-2.551-2.463 3.079 3.079 0 0 0-2.612.816l-.007.007a1.501 1.501 0 0 1-2.045 0l-.009-.008a3.082 3.082 0 0 0-2.121-.861z"/></svg>`,
+    heartFilled: `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M15.724 4.22A4.313 4.313 0 0 0 12.192.814a4.269 4.269 0 0 0-3.622 1.13.837.837 0 0 1-1.14 0 4.272 4.272 0 0 0-6.21 5.855l5.916 7.05a1.128 1.128 0 0 0 1.727 0l5.916-7.05a4.228 4.228 0 0 0 .945-3.577z"/></svg>`,
+};
+
+// Function to extract dominant color from image
+const extractDominantColor = (imageUrl: string): Promise<string> => {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                resolve('#282828');
+                return;
+            }
+
+            canvas.width = 50;
+            canvas.height = 50;
+            ctx.drawImage(img, 0, 0, 50, 50);
+
+            try {
+                const imageData = ctx.getImageData(0, 0, 50, 50).data;
+                let r = 0, g = 0, b = 0, count = 0;
+
+                // Sample pixels to get average color
+                for (let i = 0; i < imageData.length; i += 16) {
+                    r += imageData[i];
+                    g += imageData[i + 1];
+                    b += imageData[i + 2];
+                    count++;
+                }
+
+                r = Math.floor(r / count);
+                g = Math.floor(g / count);
+                b = Math.floor(b / count);
+
+                // Darken the color for better contrast
+                r = Math.floor(r * 0.4);
+                g = Math.floor(g * 0.4);
+                b = Math.floor(b * 0.4);
+
+                resolve(`rgb(${r}, ${g}, ${b})`);
+            } catch (e) {
+                resolve('#282828');
+            }
+        };
+        img.onerror = () => resolve('#282828');
+        img.src = imageUrl;
+    });
 };
 
 // Player state
@@ -83,6 +133,12 @@ const updatePlayerUI = () => {
         playPauseBtn.innerHTML = playerState.isPlaying ? icons.pause : icons.play;
     }
 
+    // Update mobile play button
+    const mobilePlayBtn = document.getElementById('player-mobile-play');
+    if (mobilePlayBtn) {
+        mobilePlayBtn.innerHTML = playerState.isPlaying ? icons.pause : icons.play;
+    }
+
     // Update progress bar
     const progressBar = document.getElementById('player-progress') as HTMLInputElement;
     if (progressBar && playerState.duration > 0) {
@@ -106,7 +162,16 @@ const updatePlayerUI = () => {
 
         if (titleEl) titleEl.textContent = playerState.currentTrack.title;
         if (artistEl) artistEl.textContent = playerState.currentTrack.artist;
-        if (coverEl) coverEl.src = playerState.currentTrack.coverUrl;
+        if (coverEl && coverEl.src !== playerState.currentTrack.coverUrl) {
+            coverEl.src = playerState.currentTrack.coverUrl;
+            // Update background color when cover changes
+            const footer = document.getElementById('player-bar');
+            if (footer && playerState.currentTrack.coverUrl && !playerState.currentTrack.coverUrl.startsWith('data:')) {
+                extractDominantColor(playerState.currentTrack.coverUrl).then(color => {
+                    footer.style.setProperty('--player-bg-color', color);
+                });
+            }
+        }
     }
 
     // Update volume
@@ -199,7 +264,57 @@ export const Footer = async (): Promise<HTMLElement> => {
     trackInfo.appendChild(trackArtist);
     nowPlaying.appendChild(trackCover);
     nowPlaying.appendChild(trackInfo);
+
+    // Mobile actions container (heart + play button for mobile)
+    const mobileActions = document.createElement("div");
+    mobileActions.className = "mobile-actions";
+
+    // Heart button
+    const heartBtn = document.createElement("button");
+    heartBtn.className = "control-btn control-btn-heart";
+    heartBtn.id = "player-heart-btn";
+    heartBtn.innerHTML = icons.heart;
+    heartBtn.addEventListener("click", () => {
+        // Toggle heart state
+        heartBtn.classList.toggle("active");
+        if (heartBtn.classList.contains("active")) {
+            heartBtn.innerHTML = icons.heartFilled;
+        } else {
+            heartBtn.innerHTML = icons.heart;
+        }
+    });
+
+    // Mobile play button
+    const mobilePlayBtn = document.createElement("button");
+    mobilePlayBtn.className = "control-btn control-btn-mobile-play";
+    mobilePlayBtn.id = "player-mobile-play";
+    mobilePlayBtn.innerHTML = isPlaying ? icons.pause : icons.play;
+    mobilePlayBtn.addEventListener("click", async () => {
+        try {
+            if (playerState.isPlaying) {
+                await spotifyApiCall(SpotifyEndpoints.pause, 'PUT');
+            } else {
+                await spotifyApiCall(SpotifyEndpoints.play, 'PUT');
+            }
+            playerState.isPlaying = !playerState.isPlaying;
+            updatePlayerUI();
+        } catch (error) {
+            console.error('Error toggling playback:', error);
+        }
+    });
+
+    mobileActions.appendChild(heartBtn);
+    mobileActions.appendChild(mobilePlayBtn);
+
     leftSection.appendChild(nowPlaying);
+    leftSection.appendChild(mobileActions);
+
+    // Extract dominant color for mobile background
+    if (albumCover && !albumCover.startsWith('data:')) {
+        extractDominantColor(albumCover).then(color => {
+            footer.style.setProperty('--player-bg-color', color);
+        });
+    }
 
     // ========== CENTER SECTION - Controls ==========
     const centerSection = document.createElement("div");

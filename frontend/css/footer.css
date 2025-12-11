@@ -315,57 +315,105 @@
    RESPONSIVE - Mobile
    ============================================ */
 
+/* Mobile actions (hidden on desktop) */
+.mobile-actions {
+    display: none;
+    align-items: center;
+    gap: var(--spacing-s);
+    margin-left: auto;
+}
+
+.control-btn-heart {
+    width: 32px;
+    height: 32px;
+}
+
+.control-btn-heart svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.control-btn-heart.active {
+    color: var(--green-main);
+}
+
+.control-btn-mobile-play {
+    width: 32px;
+    height: 32px;
+}
+
+.control-btn-mobile-play svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
 @media (max-width: 430px) {
     .player-bar {
-        height: var(--footer-height-mobile);
-        padding: 0 var(--spacing-s);
+        height: 56px;
+        padding: var(--spacing-s) var(--spacing-m);
+        background-color: var(--player-bg-color, #282828);
+        border-top: none;
+        border-radius: 8px 8px 0 0;
+        margin: 0 var(--spacing-s);
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        transition: background-color 0.5s ease;
     }
 
     .player-left {
-        min-width: auto;
-        flex: 0 0 auto;
+        flex: 1;
+        min-width: 0;
+        gap: var(--spacing-s);
+    }
+
+    .now-playing {
+        flex: 1;
+        min-width: 0;
+        gap: var(--spacing-s);
     }
 
     .track-cover {
         width: 40px;
         height: 40px;
+        border-radius: 4px;
+        flex-shrink: 0;
     }
 
     .track-info {
-        display: none;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        gap: 0;
     }
 
+    .track-title {
+        font-size: var(--text-sm);
+        font-weight: var(--font-weight-bold);
+        max-width: none;
+        color: var(--text-base);
+    }
+
+    .track-artist {
+        font-size: var(--text-xs);
+        max-width: none;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Show mobile actions */
+    .mobile-actions {
+        display: flex;
+    }
+
+    /* Hide desktop controls */
     .player-center {
-        flex: 1;
-    }
-
-    .player-controls {
-        gap: var(--spacing-s);
-    }
-
-    .control-btn-small {
-        display: none;
-    }
-
-    .control-btn-play {
-        width: 40px;
-        height: 40px;
-    }
-
-    .progress-container {
         display: none;
     }
 
     .player-right {
-        min-width: auto;
-        flex: 0 0 auto;
-    }
-
-    .control-btn-extra {
-        display: none;
-    }
-
-    .volume-container {
         display: none;
     }
 }
