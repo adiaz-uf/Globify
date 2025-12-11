@@ -1,36 +1,56 @@
 import { PlaylistCard } from "@/views/components/FeaturedPlaylists/PlaylistCard.js";
 import { applyColorGlow } from "@/utils/colorExtractor.js";
+import { spotifyApiCall } from "@/api/spotifyClient.js";
+import { SpotifyEndpoints } from "@/api/endpoints.js";
 
-// Sample data for testing
-const samplePlaylists = [
-    { img: "https://placehold.co/150x150/1DB954/white?text=1", title: "Today's Top Hits" },
-    { img: "https://placehold.co/150x150/E91E63/white?text=2", title: "Discover Weekly" },
-    { img: "https://placehold.co/150x150/9C27B0/white?text=3", title: "Release Radar" },
-    { img: "https://placehold.co/150x150/2196F3/white?text=4", title: "Chill Vibes" },
-    { img: "https://placehold.co/150x150/FF5722/white?text=5", title: "Workout Mix" },
-    { img: "https://placehold.co/150x150/00BCD4/white?text=6", title: "Focus Flow" },
-    { img: "https://placehold.co/150x150/8BC34A/white?text=7", title: "Throwback Jams" },
-    { img: "https://placehold.co/150x150/FFC107/white?text=8", title: "Party Hits" },
-];
+interface SpotifyPlaylist {
+    id: string;
+    name: string;
+    images: { url: string }[];
+}
+
+interface MyPlaylistsResponse {
+    items: SpotifyPlaylist[];
+    total: number;
+}
 
 export const FeaturedPlayList = () => {
     const featuredPlayList = document.createElement('div');
     featuredPlayList.classList.add('featured-playlists');
 
     const title = document.createElement('h2');
-    title.textContent = 'Destacados';
+    title.textContent = 'Tus Playlists';
     featuredPlayList.appendChild(title);
 
     const grid = document.createElement('div');
     grid.classList.add('playlist-grid');
 
-    samplePlaylists.forEach(playlist => {
-        const card = PlaylistCard(playlist.img, playlist.title);
-        grid.appendChild(card);
-        // Apply color glow effect - pass container as second param
-        applyColorGlow(card, featuredPlayList);
-    });
-
+    grid.innerHTML = '<p style="color: var(--text-subdued);">Cargando...</p>';
     featuredPlayList.appendChild(grid);
+
+    loadUserPlaylists(grid, featuredPlayList);
+
     return featuredPlayList;
+}
+
+async function loadUserPlaylists(grid: HTMLElement, container: HTMLElement) {
+    try {
+        const data = await spotifyApiCall<MyPlaylistsResponse>(
+            SpotifyEndpoints.myPlaylistsPreview,
+            'GET'
+        );
+
+        grid.innerHTML = '';
+
+        data.items.forEach(playlist => {
+            const imageUrl = playlist.images[0]?.url || 'https://placehold.co/150x150/333/white?text=No+Image';
+            const card = PlaylistCard(imageUrl, playlist.name);
+            grid.appendChild(card);
+            applyColorGlow(card, container);
+        });
+
+    } catch (error) {
+        console.error('Error fetching user playlists:', error);
+        grid.innerHTML = '<p style="color: var(--text-negative);">Error al cargar playlists</p>';
+    }
 }
