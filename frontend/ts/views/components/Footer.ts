@@ -86,7 +86,10 @@ const updatePlayerUI = () => {
     // Update progress bar
     const progressBar = document.getElementById('player-progress') as HTMLInputElement;
     if (progressBar && playerState.duration > 0) {
-        progressBar.value = String((playerState.currentTime / playerState.duration) * 100);
+        const progressPercent = (playerState.currentTime / playerState.duration) * 100;
+        progressBar.value = String(progressPercent);
+        // Update CSS variable for visual progress
+        progressBar.style.setProperty('--progress', `${progressPercent}%`);
     }
 
     // Update time display
@@ -109,7 +112,10 @@ const updatePlayerUI = () => {
     // Update volume
     const volumeBar = document.getElementById('player-volume') as HTMLInputElement;
     if (volumeBar) {
-        volumeBar.value = String(playerState.isMuted ? 0 : playerState.volume);
+        const volumeValue = playerState.isMuted ? 0 : playerState.volume;
+        volumeBar.value = String(volumeValue);
+        // Update CSS variable for visual progress
+        volumeBar.style.setProperty('--progress', `${volumeValue}%`);
     }
 
     // Update volume icon
@@ -142,6 +148,8 @@ export const Footer = async (): Promise<HTMLElement> => {
     const isPlaying = playerData?.is_playing || false;
     const progressMs = playerData?.progress_ms || 0;
     const durationMs = currentTrack?.duration_ms || 0;
+    const shuffleState = playerData?.shuffle_state || false;
+    const repeatState = playerData?.repeat_state || 'off';
 
     // Get track info
     const trackName = currentTrack?.name || '';
@@ -152,6 +160,8 @@ export const Footer = async (): Promise<HTMLElement> => {
     playerState.isPlaying = isPlaying;
     playerState.currentTime = Math.floor(progressMs / 1000);
     playerState.duration = Math.floor(durationMs / 1000);
+    playerState.isShuffle = shuffleState;
+    playerState.repeatMode = repeatState === 'track' ? 'one' : (repeatState === 'context' ? 'all' : 'off');
     playerState.currentTrack = currentTrack ? {
         title: trackName,
         artist: artistName,
@@ -201,45 +211,83 @@ export const Footer = async (): Promise<HTMLElement> => {
 
     // Shuffle button
     const shuffleBtn = document.createElement("button");
-    shuffleBtn.className = "control-btn control-btn-small";
+    shuffleBtn.className = `control-btn control-btn-small ${playerState.isShuffle ? 'active' : ''}`;
     shuffleBtn.innerHTML = icons.shuffle;
-    shuffleBtn.addEventListener("click", () => {
-        playerState.isShuffle = !playerState.isShuffle;
-        shuffleBtn.classList.toggle("active", playerState.isShuffle);
+    shuffleBtn.addEventListener("click", async () => {
+        try {
+            const newShuffleState = !playerState.isShuffle;
+            await spotifyApiCall(`${SpotifyEndpoints.shuffle}?state=${newShuffleState}`, 'PUT');
+            playerState.isShuffle = newShuffleState;
+            shuffleBtn.classList.toggle("active", playerState.isShuffle);
+        } catch (error) {
+            console.error('Error toggling shuffle:', error);
+        }
     });
 
     // Previous button
     const prevBtn = document.createElement("button");
     prevBtn.className = "control-btn control-btn-small";
     prevBtn.innerHTML = icons.previous;
-    prevBtn.addEventListener("click", () => onPrevious?.());
+    prevBtn.addEventListener("click", async () => {
+        try {
+            await spotifyApiCall(SpotifyEndpoints.previous, 'POST');
+            // Refresh player state after action
+            setTimeout(() => refreshPlayerState(), 300);
+        } catch (error) {
+            console.error('Error skipping to previous:', error);
+        }
+    });
 
     // Play/Pause button
     const playPauseBtn = document.createElement("button");
     playPauseBtn.id = "player-play-pause";
     playPauseBtn.className = "control-btn control-btn-play";
     playPauseBtn.innerHTML = isPlaying ? icons.pause : icons.play;
-    playPauseBtn.addEventListener("click", () => {
-        playerState.isPlaying = !playerState.isPlaying;
-        updatePlayerUI();
-        onPlayPause?.();
+    playPauseBtn.addEventListener("click", async () => {
+        try {
+            if (playerState.isPlaying) {
+                await spotifyApiCall(SpotifyEndpoints.pause, 'PUT');
+            } else {
+                await spotifyApiCall(SpotifyEndpoints.play, 'PUT');
+            }
+            playerState.isPlaying = !playerState.isPlaying;
+            updatePlayerUI();
+        } catch (error) {
+            console.error('Error toggling playback:', error);
+        }
     });
 
     // Next button
     const nextBtn = document.createElement("button");
     nextBtn.className = "control-btn control-btn-small";
     nextBtn.innerHTML = icons.next;
-    nextBtn.addEventListener("click", () => onNext?.());
+    nextBtn.addEventListener("click", async () => {
+        try {
+            await spotifyApiCall(SpotifyEndpoints.next, 'POST');
+            // Refresh player state after action
+            setTimeout(() => refreshPlayerState(), 300);
+        } catch (error) {
+            console.error('Error skipping to next:', error);
+        }
+    });
 
-    // Repeat button
+    // Repeat button - maps to Spotify's repeat states: off, context (all), track (one)
     const repeatBtn = document.createElement("button");
-    repeatBtn.className = "control-btn control-btn-small";
+    repeatBtn.className = `control-btn control-btn-small ${playerState.repeatMode !== 'off' ? 'active' : ''}`;
     repeatBtn.innerHTML = icons.repeat;
-    repeatBtn.addEventListener("click", () => {
-        const modes: ('off' | 'all' | 'one')[] = ['off', 'all', 'one'];
-        const currentIndex = modes.indexOf(playerState.repeatMode);
-        playerState.repeatMode = modes[(currentIndex + 1) % 3];
-        repeatBtn.classList.toggle("active", playerState.repeatMode !== 'off');
+    repeatBtn.addEventListener("click", async () => {
+        try {
+            const modes: ('off' | 'all' | 'one')[] = ['off', 'all', 'one'];
+            const spotifyModes = ['off', 'context', 'track']; // Spotify API values
+            const currentIndex = modes.indexOf(playerState.repeatMode);
+            const nextIndex = (currentIndex + 1) % 3;
+
+            await spotifyApiCall(`${SpotifyEndpoints.repeat}?state=${spotifyModes[nextIndex]}`, 'PUT');
+            playerState.repeatMode = modes[nextIndex];
+            repeatBtn.classList.toggle("active", playerState.repeatMode !== 'off');
+        } catch (error) {
+            console.error('Error toggling repeat:', error);
+        }
     });
 
     controls.appendChild(shuffleBtn);
@@ -268,10 +316,16 @@ export const Footer = async (): Promise<HTMLElement> => {
         ? (playerState.currentTime / playerState.duration) * 100
         : 0;
     progressBar.value = String(progressPercent);
-    progressBar.addEventListener("input", (e) => {
+    progressBar.addEventListener("change", async (e) => {
         const value = Number((e.target as HTMLInputElement).value);
-        const seekTime = (value / 100) * playerState.duration;
-        onSeek?.(seekTime);
+        const seekTimeMs = Math.floor((value / 100) * playerState.duration * 1000);
+        try {
+            await spotifyApiCall(`${SpotifyEndpoints.seek}?position_ms=${seekTimeMs}`, 'PUT');
+            playerState.currentTime = Math.floor(seekTimeMs / 1000);
+            updatePlayerUI();
+        } catch (error) {
+            console.error('Error seeking:', error);
+        }
     });
 
     const durationEl = document.createElement("span");
@@ -308,9 +362,16 @@ export const Footer = async (): Promise<HTMLElement> => {
     volumeBtn.id = "player-volume-btn";
     volumeBtn.className = "control-btn control-btn-extra";
     volumeBtn.innerHTML = icons.volume;
-    volumeBtn.addEventListener("click", () => {
-        playerState.isMuted = !playerState.isMuted;
-        updatePlayerUI();
+    volumeBtn.addEventListener("click", async () => {
+        try {
+            const newMutedState = !playerState.isMuted;
+            const volumePercent = newMutedState ? 0 : playerState.volume;
+            await spotifyApiCall(`${SpotifyEndpoints.volume}?volume_percent=${volumePercent}`, 'PUT');
+            playerState.isMuted = newMutedState;
+            updatePlayerUI();
+        } catch (error) {
+            console.error('Error toggling mute:', error);
+        }
     });
 
     const volumeBar = document.createElement("input");
@@ -320,12 +381,16 @@ export const Footer = async (): Promise<HTMLElement> => {
     volumeBar.min = "0";
     volumeBar.max = "100";
     volumeBar.value = "100";
-    volumeBar.addEventListener("input", (e) => {
+    volumeBar.addEventListener("change", async (e) => {
         const value = Number((e.target as HTMLInputElement).value);
-        playerState.volume = value;
-        playerState.isMuted = value === 0;
-        updatePlayerUI();
-        onVolumeChange?.(value);
+        try {
+            await spotifyApiCall(`${SpotifyEndpoints.volume}?volume_percent=${value}`, 'PUT');
+            playerState.volume = value;
+            playerState.isMuted = value === 0;
+            updatePlayerUI();
+        } catch (error) {
+            console.error('Error changing volume:', error);
+        }
     });
 
     volumeContainer.appendChild(volumeBtn);
@@ -346,5 +411,70 @@ export const Footer = async (): Promise<HTMLElement> => {
     footer.appendChild(centerSection);
     footer.appendChild(rightSection);
 
+    // Start polling for player state updates
+    startPlayerStatePolling();
+
     return footer;
+};
+
+// ========== PLAYER STATE REFRESH ==========
+let pollingInterval: ReturnType<typeof setInterval> | null = null;
+
+const refreshPlayerState = async () => {
+    try {
+        const playerData = await spotifyApiCall<any>(SpotifyEndpoints.playerState, 'GET');
+
+        if (playerData) {
+            const currentTrack = playerData.item;
+            const isPlaying = playerData.is_playing || false;
+            const progressMs = playerData.progress_ms || 0;
+            const durationMs = currentTrack?.duration_ms || 0;
+            const shuffleState = playerData.shuffle_state || false;
+            const repeatState = playerData.repeat_state || 'off';
+
+            const trackName = currentTrack?.name || '';
+            const artistName = currentTrack?.artists?.map((a: any) => a.name).join(', ') || '';
+            const defaultCover = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect fill='%23282828' width='80' height='80'/%3E%3Ccircle cx='40' cy='40' r='30' fill='%23181818'/%3E%3Ccircle cx='40' cy='40' r='8' fill='%23282828'/%3E%3Ccircle cx='40' cy='40' r='4' fill='%23181818'/%3E%3C/svg%3E";
+            const albumCover = currentTrack?.album?.images?.[0]?.url || defaultCover;
+
+            playerState.isPlaying = isPlaying;
+            playerState.currentTime = Math.floor(progressMs / 1000);
+            playerState.duration = Math.floor(durationMs / 1000);
+            playerState.isShuffle = shuffleState;
+            playerState.repeatMode = repeatState === 'track' ? 'one' : (repeatState === 'context' ? 'all' : 'off');
+            playerState.currentTrack = currentTrack ? {
+                title: trackName,
+                artist: artistName,
+                album: currentTrack?.album?.name || '',
+                coverUrl: albumCover
+            } : null;
+
+            updatePlayerUI();
+
+            // Update shuffle and repeat button states
+            const shuffleBtn = document.querySelector('.control-btn-small:first-child');
+            const repeatBtn = document.querySelector('.player-controls .control-btn-small:last-child');
+            if (shuffleBtn) shuffleBtn.classList.toggle('active', playerState.isShuffle);
+            if (repeatBtn) repeatBtn.classList.toggle('active', playerState.repeatMode !== 'off');
+        }
+    } catch (error) {
+        console.error('Error refreshing player state:', error);
+    }
+};
+
+const startPlayerStatePolling = () => {
+    // Clear any existing interval
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+    }
+
+    // Poll every 1 second for smooth progress updates
+    pollingInterval = setInterval(refreshPlayerState, 1000);
+};
+
+export const stopPlayerStatePolling = () => {
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    }
 };

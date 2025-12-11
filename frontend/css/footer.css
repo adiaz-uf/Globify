@@ -286,6 +286,16 @@
     opacity: 1;
 }
 
+.volume-bar::-webkit-slider-runnable-track {
+    height: 4px;
+    background: linear-gradient(to right, var(--text-base) 0%, var(--text-base) var(--progress, 100%), var(--bg-highlight) var(--progress, 100%));
+    border-radius: 2px;
+}
+
+.volume-container:hover .volume-bar::-webkit-slider-runnable-track {
+    background: linear-gradient(to right, var(--green-main) 0%, var(--green-main) var(--progress, 100%), var(--bg-highlight) var(--progress, 100%));
+}
+
 .volume-bar::-moz-range-thumb {
     width: 12px;
     height: 12px;
@@ -293,6 +303,12 @@
     border-radius: 50%;
     border: none;
     cursor: pointer;
+}
+
+.volume-bar::-moz-range-track {
+    height: 4px;
+    background: linear-gradient(to right, var(--text-base) 0%, var(--text-base) var(--progress, 100%), var(--bg-highlight) var(--progress, 100%));
+    border-radius: 2px;
 }
 
 /* ============================================
