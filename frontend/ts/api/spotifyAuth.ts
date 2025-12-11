@@ -20,7 +20,41 @@ function base64encode(input: ArrayBuffer): string {
         .replace(/\//g, '_');
 }
 
+// ============================================
+// TOKEN STORAGE HELPERS
+// ============================================
+
+function saveTokens(accessToken: string, refreshToken: string, expiresIn: number): void {
+    const now = new Date().getTime();
+    localStorage.setItem('access_token', accessToken);
+    localStorage.setItem('refresh_token', refreshToken);
+    localStorage.setItem('token_expiry', (now + expiresIn * 1000).toString());
+}
+
+function getRefreshToken(): string | null {
+    return localStorage.getItem('refresh_token');
+}
+
+function getTokenExpiry(): number {
+    const expiry = localStorage.getItem('token_expiry');
+    return expiry ? parseInt(expiry, 10) : 0;
+}
+
+/**
+ * Check if the current token is expired or about to expire (within 5 minutes)
+ */
+function isTokenExpired(): boolean {
+    const expiry = getTokenExpiry();
+    if (!expiry) return true;
+
+    // Consider expired if less than 5 minutes remaining (300000 ms)
+    const bufferTime = 5 * 60 * 1000;
+    return Date.now() >= (expiry - bufferTime);
+}
+
+// ============================================
 // AUTH LOGIC
+// ============================================
 
 export async function redirectToSpotifyLogin() {
     const codeVerifier = generateRandomString(128);
@@ -66,16 +100,11 @@ export async function handleLoginCallback(): Promise<string | null> {
         const data = await fetchRequest<any>('https://accounts.spotify.com/api/token', {
             method: 'POST',
             body: bodyParams,
-            isUrlEncoded: true // form logic
+            isUrlEncoded: true
         });
 
         // Store tokens and expiration time
-        localStorage.setItem('access_token', data.access_token);
-        localStorage.setItem('refresh_token', data.refresh_token);
-
-        // data.expires_in is usually 3600 seconds
-        const now = new Date().getTime();
-        localStorage.setItem('token_expiry', (now + data.expires_in * 1000).toString());
+        saveTokens(data.access_token, data.refresh_token, data.expires_in);
 
         // Clean up the URL
         window.history.replaceState({}, document.title, "/");
@@ -86,13 +115,83 @@ export async function handleLoginCallback(): Promise<string | null> {
     }
 }
 
+/**
+ * Refresh the access token using the refresh token
+ * Returns the new access token or null if refresh fails
+ */
+export async function refreshAccessToken(): Promise<string | null> {
+    const refreshToken = getRefreshToken();
+
+    if (!refreshToken) {
+        console.error("No refresh token available");
+        return null;
+    }
+
+    const bodyParams = new URLSearchParams({
+        client_id: clientId,
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+    });
+
+    try {
+        console.log("Refreshing access token...");
+
+        const data = await fetchRequest<any>('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            body: bodyParams,
+            isUrlEncoded: true
+        });
+
+        // Save new tokens (Spotify may return a new refresh_token)
+        saveTokens(
+            data.access_token,
+            data.refresh_token || refreshToken, // Use old refresh token if new one not provided
+            data.expires_in
+        );
+
+        console.log("Token refreshed successfully");
+        return data.access_token;
+    } catch (error) {
+        console.error("Error refreshing token:", error);
+        // If refresh fails, clear tokens and redirect to login
+        logout();
+        return null;
+    }
+}
+
+/**
+ * Get the current access token, refreshing if necessary
+ * This is the main function to use when making API calls
+ */
+export async function getValidAccessToken(): Promise<string | null> {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+        return null;
+    }
+
+    // If token is expired or about to expire, refresh it
+    if (isTokenExpired()) {
+        console.log("Token expired or expiring soon, refreshing...");
+        return await refreshAccessToken();
+    }
+
+    return token;
+}
+
+/**
+ * Get the current access token (synchronous, does not refresh)
+ * Use getValidAccessToken() for automatic refresh
+ */
 export function getAccessToken(): string | null {
-    // TODO: Add logic to refresh the token if it has expired
     return localStorage.getItem('access_token');
 }
 
 export function logout() {
-    localStorage.clear();
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('token_expiry');
+    localStorage.removeItem('code_verifier');
     window.location.href = redirectUri;
 }
 

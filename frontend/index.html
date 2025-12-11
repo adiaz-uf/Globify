@@ -2,58 +2,28 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Globify</title>
-    <link rel="stylesheet" href="./css/styles.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Globify</title>
+	<link rel="stylesheet" href="./css/styles.css">
+	<link rel="stylesheet" href="./css/navbar.css">
+	<link rel="stylesheet" href="./css/footer.css">
+	<link rel="stylesheet" href="./css/profile.css">
 </head>
 
 <body>
-    <div id="app">
-        <nav id="sidebar" class="sidebar">
-            <div class="logo">Globify</div>
-            <ul>
-                <li><a href="/" data-link>Home</a></li>
-                <li><a href="/search" data-link>Search</a></li>
-                <li><a href="/library" data-link>Your Library</a></li>
-            </ul>
-            <div id="playlists-list">
-            </div>
-        </nav>
+	<div id="app">
+		<!-- Navbar from: Navbar.ts -->
+		<div id="navbar-container"></div>
 
-        <main class="main-content">
-            <header class="top-bar">
-                <div class="navigation-arrows">
-                    <button>&lt;</button>
-                    <button>&gt;</button>
-                </div>
-                <div id="user-profile-pill">
-                    Loading...
-                </div>
-            </header>
-
-            <div id="view-container"></div>
-        </main>
-
-        <footer id="player-bar" class="player-bar">
-            <div class="now-playing">
-            </div>
-            <div class="player-controls">
-                <button id="btn-prev">⏮</button>
-                <button id="btn-play-pause">▶</button>
-                <button id="btn-next">⏭</button>
-            </div>
-            <div class="volume-controls">
-            </div>
-        </footer>
+		<main class="main-content">
+			<div id="view-container"></div>
+		</main>
+		
+		<!-- Footer from: Footer.ts -->
+        <div id="footer-container"></div>
     </div>
-    <script type="importmap">
-{
-    "imports": {
-        "@/": "/js/" 
-    }
-}
-</script>
+
     <script type="module" src="/js/main.js"></script>
 </body>
 

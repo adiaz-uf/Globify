@@ -1,4 +1,4 @@
-import { getAccessToken } from './spotifyAuth.js';
+import { getValidAccessToken, refreshAccessToken, logout } from './spotifyAuth.js';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -35,6 +35,54 @@ async function fetchRequest<T>(url: string, options: RequestOptions = {}): Promi
         }
     }
 
+    const response = await fetch(url, {
+        method,
+        headers: requestHeaders,
+        body: requestBody
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+    }
+
+    // If the response has no content (e.g. 204), return null
+    if (response.status === 204) return null as T;
+
+    return await response.json();
+}
+
+/**
+ * Spotify API client with automatic token refresh
+ * Automatically refreshes token if expired and retries on 401
+ */
+export async function spotifyApiCall<T>(
+    endpoint: string,
+    method: HttpMethod = 'GET',
+    body?: any,
+    isRetry: boolean = false
+): Promise<T> {
+    // Get a valid token (refreshes if expired)
+    const token = await getValidAccessToken();
+
+    if (!token) {
+        throw new Error("No access token found. User must log in.");
+    }
+
+    const baseUrl = 'https://api.spotify.com/v1';
+    const url = endpoint.startsWith('http') ? endpoint : `${baseUrl}${endpoint}`;
+
+    // Build request headers
+    const requestHeaders: Record<string, string> = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    };
+
+    // Prepare body if present
+    let requestBody: string | undefined;
+    if (body) {
+        requestBody = JSON.stringify(body);
+    }
+
     try {
         const response = await fetch(url, {
             method,
@@ -42,13 +90,27 @@ async function fetchRequest<T>(url: string, options: RequestOptions = {}): Promi
             body: requestBody
         });
 
-        if (!response.ok) {
-            // Handle global errors like 401 (Token expired)
-            if (response.status === 401) {
-                console.error("Token expired or invalid");
-                // TODO: Redirect to login or refresh token
+        // Handle 401 Unauthorized - try to refresh token once
+        if (response.status === 401 && !isRetry) {
+            console.log("Received 401, attempting to refresh token...");
+
+            const newToken = await refreshAccessToken();
+
+            if (newToken) {
+                // Retry the request with the new token
+                return spotifyApiCall<T>(endpoint, method, body, true);
+            } else {
+                // Refresh failed, logout user
+                console.error("Token refresh failed, logging out...");
+                logout();
+                throw new Error("Session expired. Please log in again.");
             }
-            throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+        }
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            console.error(`Spotify API Error: ${response.status}`, errorBody);
+            throw new Error(`Spotify API Error: ${response.status} ${response.statusText}`);
         }
 
         // If the response has no content (e.g. 204), return null
@@ -62,28 +124,6 @@ async function fetchRequest<T>(url: string, options: RequestOptions = {}): Promi
 }
 
 /**
- * Spotify API client (automatically adds the token)
- */
-export async function spotifyApiCall<T>(endpoint: string, method: HttpMethod = 'GET', body?: any): Promise<T> {
-    const token = getAccessToken();
-    if (!token) {
-        throw new Error("No access token found. User must log in.");
-    }
-
-    const baseUrl = 'https://api.spotify.com/v1';
-    // Intelligent URL handling: if it's complete, use it, otherwise add the base
-    const url = endpoint.startsWith('http') ? endpoint : `${baseUrl}${endpoint}`;
-
-    return fetchRequest<T>(url, {
-        method,
-        body,
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
-}
-
-/**
- * Export the base function for any HTTP call
+ * Export the base function for any HTTP call (used for auth endpoints)
  */
 export { fetchRequest };

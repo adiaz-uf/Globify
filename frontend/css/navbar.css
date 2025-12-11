@@ -1,0 +1,235 @@
+/* ============================================
+   NAVBAR STYLES - Horizontal Top Bar
+   Logo left | Home + Search center | Profile right
+   ============================================ */
+
+.global-nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
+    background-color: var(--bg-base);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-l);
+    z-index: var(--z-sticky-header);
+}
+
+/* Navbar Sections */
+.nav-section {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-s);
+}
+
+.nav-left {
+    flex: 0 0 auto;
+}
+
+.nav-center {
+    flex: 1;
+    justify-content: center;
+    gap: var(--spacing-m);
+}
+
+.nav-right {
+    flex: 0 0 auto;
+}
+
+/* Logo Styles */
+.global-nav-bar .logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.global-nav-bar .logo:hover {
+    transform: scale(1.05);
+}
+
+.global-nav-bar .logo svg {
+    width: 32px;
+    height: 32px;
+    fill: var(--green-main);
+}
+
+/* Navigation Lists */
+.global-nav-bar ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-s);
+    margin: 0;
+    padding: 0;
+}
+
+/* Navigation Links (Home, Profile buttons) */
+.global-nav-bar ul li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    color: var(--text-subdued);
+    text-decoration: none;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    position: relative;
+    background-color: var(--bg-highlight);
+}
+
+.global-nav-bar ul li a .nav-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.global-nav-bar ul li a .nav-icon svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+.global-nav-bar ul li a:hover {
+    color: var(--text-base);
+    transform: scale(1.05);
+}
+
+.global-nav-bar ul li a.active {
+    color: var(--text-base);
+}
+
+/* ============================================
+   SEARCH INPUT STYLES
+   ============================================ */
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 400px;
+    width: 100%;
+    background-color: var(--bg-highlight);
+    border: 2px solid transparent;
+    border-radius: var(--border-radius-pill);
+    transition: all 0.2s ease;
+}
+
+.search-container:hover {
+    background-color: #282828;
+}
+
+.search-container:focus-within {
+    border-color: var(--text-base);
+    background-color: #282828;
+}
+
+/* Search Button (left side) */
+.search-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-subdued);
+    transition: color 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0;
+    padding: 0;
+}
+
+.search-button:hover {
+    color: var(--text-base);
+    transform: scale(1.1);
+}
+
+.search-button svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.search-container:focus-within .search-button {
+    color: var(--text-base);
+}
+
+/* Search Input */
+.search-input {
+    flex: 1;
+    height: 48px;
+    padding: 0 var(--spacing-m) 0 0;
+    background: transparent;
+    border: none;
+    color: var(--text-base);
+    font-family: var(--font-family);
+    font-size: var(--text-sm);
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: var(--text-subdued);
+}
+
+/* ============================================
+   RESPONSIVE - Mobile
+   ============================================ */
+
+@media (max-width: 430px) {
+    .global-nav-bar {
+        padding: 0 var(--spacing-m);
+    }
+
+    .global-nav-bar .logo svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .nav-center {
+        gap: var(--spacing-s);
+    }
+
+    .search-container {
+        max-width: 180px;
+    }
+
+    .search-button {
+        width: 36px;
+        height: 40px;
+    }
+
+    .search-button svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .search-input {
+        height: 40px;
+        font-size: var(--text-xs);
+    }
+
+    .search-input::placeholder {
+        font-size: var(--text-xs);
+    }
+
+    .global-nav-bar ul li a {
+        width: 40px;
+        height: 40px;
+    }
+
+    .global-nav-bar ul li a .nav-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .global-nav-bar ul li a .nav-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+}

@@ -1,3 +1,4 @@
+import { updateNavbarActiveState } from "@/views/components/Navbar.js";
 import { HomePage } from "@/views/pages/HomePage.js";
 import { NotFoundPage } from "@/views/pages/NotFoundPage.js";
 
@@ -5,11 +6,11 @@ const routes: Record<string, () => HTMLElement | Promise<HTMLElement>> = {
     "/": HomePage,
     "/404": NotFoundPage,
     "/playlist": async () => {
-        const module = await import("../views/pages/PlaylistPage.js");
+        const module = await import("@/views/pages/PlaylistPage.js");
         return module.PlaylistPage();
     },
     "/profile": async () => {
-        const module = await import("../views/pages/ProfilePage.js")
+        const module = await import("@/views/pages/ProfilePage.js");
         return module.ProfilePage();
     }
 };
@@ -30,7 +31,9 @@ export const render = async () => {
     try {
         const viewElement = await routeFunction();
         container.appendChild(viewElement);
+        updateNavbarActiveState()
     } catch (error) {
+        console.error('Error loading page:', error);
         container.innerHTML = "<h1>Error crítico cargando la aplicación</h1>";
     }
 }
