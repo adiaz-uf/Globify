@@ -8,15 +8,26 @@ export const SpotifyEndpoints = {
     // Note: Limit set to 50 as per general instructions
     categories: '/browse/categories?limit=50',
 
+    myCategories: '/browse/categories?limit=10',
+
     // Get playlists for a specific category (requires category ID)
     getCategoryPlaylists: (categoryId: string) => `/browse/categories/${categoryId}/playlists?limit=50`,
 
     // New releases (Optional, but useful for populating Home content)
     newReleases: '/browse/new-releases?limit=20',
 
+    // New releases paginated
+    getNewReleasesPaginated: (offset: number, limit: number = 8) => `/browse/new-releases?limit=${limit}&offset=${offset}`,
+
     // === PLAYLISTS ===
     // Retrieve the logged-in user's playlists
     myPlaylists: '/me/playlists?limit=50',
+
+    // Preview: Only first 8 playlists for home grid
+    myPlaylistsPreview: '/me/playlists?limit=8',
+
+    // Paginated: Get playlists with offset for different sections
+    getMyPlaylistsPaginated: (offset: number, limit: number = 8) => `/me/playlists?limit=${limit}&offset=${offset}`,
 
     // specific playlist details (tracks, images, description)
     getPlaylistDetails: (playlistId: string) => `/playlists/${playlistId}`,

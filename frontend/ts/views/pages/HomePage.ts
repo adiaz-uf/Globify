@@ -2,12 +2,10 @@ import { FeaturedPlayList } from "@/views/components/FeaturedPlaylists/index.js"
 import { Mixes } from "@/views/components/Mixes/index.js";
 
 const mixesSections = [
-    { subtitle: "Hecho para", title: "Fede" },
-    { subtitle: "Tus favoritos", title: "Escuchados recientemente" },
-    { subtitle: "Basado en lo que escuchas", title: "Artistas similares" },
-    { subtitle: "Más de lo que te gusta", title: "Descubre algo nuevo" },
-    { subtitle: "", title: "Sumérgete de nuevo en tu música" },
-    { subtitle: "", title: "Escuchado recientemente" },
+    { subtitle: "Hecho para", title: "Ti", offset: 0, type: 'playlists' as const },
+    { subtitle: "Nuevos", title: "Lanzamientos", offset: 0, type: 'newReleases' as const },
+    { subtitle: "Más de tus", title: "Playlists", offset: 8, type: 'playlists' as const },
+    { subtitle: "Más", title: "Novedades", offset: 8, type: 'newReleases' as const },
 ];
 
 export const HomePage = () => {
@@ -15,7 +13,7 @@ export const HomePage = () => {
     div.appendChild(FeaturedPlayList());
 
     mixesSections.forEach(section => {
-        div.appendChild(Mixes(section.subtitle, section.title));
+        div.appendChild(Mixes(section.subtitle, section.title, section.offset, section.type));
     });
 
     return div;

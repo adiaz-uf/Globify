@@ -256,6 +256,7 @@
 .mixes-grid {
     -ms-overflow-style: none;
     scrollbar-width: none;
+    width: 100%;
 }
 
 /* Mix Card */
@@ -287,15 +288,53 @@
     transform: scale(1.05);
 }
 
+.mix-card-play {
+    position: absolute;
+    bottom: 48px;
+    right: 8px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--green-main);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.mix-card-play svg {
+    width: 24px;
+    height: 24px;
+    color: #000;
+    margin-left: 2px;
+}
+
+.mix-card:hover .mix-card-play {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.mix-card-play:hover {
+    transform: scale(1.05);
+    background: #1fdf64;
+}
+
 .mix-card-badge {
     position: absolute;
-    bottom: 8px;
-    left: 8px;
-    padding: 4px 8px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 8px;
     font-size: var(--text-xs);
     font-weight: var(--font-weight-bold);
     color: #000;
-    border-radius: 4px;
+    text-align: center;
+    border-radius: 0 0 var(--border-radius-m) var(--border-radius-m);
 }
 
 .mix-card-description {
