@@ -16,6 +16,11 @@ export const MixCard = (mix: MixData) => {
         <div class="mix-card-image">
             <img src="${mix.image}" alt="${mix.title}" crossorigin="anonymous">
             <span class="mix-card-badge" style="background-color: ${mix.color}">${mix.title}</span>
+            <button class="mix-card-play" aria-label="Reproducir">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5.14v14l11-7-11-7z"/>
+                </svg>
+            </button>
         </div>
         <p class="mix-card-description">${mix.description}</p>
     `;
