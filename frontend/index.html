@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="./css/layout.css">
 	<link rel="stylesheet" href="./css/navbar.css">
 	<link rel="stylesheet" href="./css/footer.css">
+	<link rel="stylesheet" href="./css/sidebar.css">
 	<link rel="stylesheet" href="./css/profile.css">
 	<link rel="stylesheet" href="./css/search.css">
 	<link rel="stylesheet" href="./css/playlist_details.css">
@@ -19,10 +20,15 @@
 		<!-- Navbar from: Navbar.ts -->
 		<div id="navbar-container"></div>
 
-		<main class="main-content">
-			<div id="view-container"></div>
-		</main>
+		<!-- Main layout container -->
+		<div class="app-layout">
+			<main class="main-content">
+				<div id="view-container"></div>
+			</main>
 
+			<!-- Now Playing Sidebar (Right) -->
+			<div id="sidebar-container"></div>
+		</div>
 
 		<!-- Footer from: Footer.ts -->
 		<div id="footer-container"></div>

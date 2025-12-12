@@ -2,6 +2,7 @@ import { navigateTo, render } from "@/utils/router.js";
 import { redirectToSpotifyLogin, handleLoginCallback, isAuthenticated, logout } from './api/spotifyAuth.js';
 import { Navbar, updateNavbarActiveState, MobileTabbar, updateMobileTabbarActiveState } from './views/components/Navbar.js';
 import { Footer } from './views/components/Footer.js';
+import { Sidebar } from './views/components/Sidebar.js';
 
 async function initApp() {
     console.log('initApp called');
@@ -104,6 +105,13 @@ async function renderAuthenticatedApp() {
     if (mobileTabbarContainer) {
         mobileTabbarContainer.innerHTML = '';
         mobileTabbarContainer.appendChild(MobileTabbar());
+    }
+
+    // Insert Sidebar component into container (Now Playing view)
+    const sidebarContainer = document.getElementById('sidebar-container');
+    if (sidebarContainer) {
+        sidebarContainer.innerHTML = '';
+        sidebarContainer.appendChild(await Sidebar());
     }
 
     // Handle browser back/forward buttons and update navbar active state

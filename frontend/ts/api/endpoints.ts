@@ -3,6 +3,10 @@ export const SpotifyEndpoints = {
     // Retrieve current user's profile (name, photo, ID)
     currentUser: '/me',
 
+    // === ARTISTS ===
+    // Get artist by ID - Usage: getArtist(artistId)
+    getArtist: (artistId: string) => `/artists/${artistId}`,
+
     // === HOME & CATEGORIES  ===
     // List of categories (Mood, Party, etc.)
     // Note: Limit set to 50 as per general instructions

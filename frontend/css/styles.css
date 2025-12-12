@@ -112,15 +112,25 @@ body {
   overflow: hidden;
 }
 
+/* App layout container (main + sidebar) */
+.app-layout {
+  display: flex;
+  flex: 1;
+  margin-top: var(--header-height);
+  margin-bottom: var(--player-height-desktop);
+  overflow: hidden;
+  gap: var(--spacing-s);
+  padding: var(--spacing-s);
+  padding-top: 0;
+}
+
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-top: var(--header-height);
-  margin-bottom: var(--player-height-desktop);
   overflow: hidden;
-  padding: var(--spacing-s);
-  padding-top: 0;
+  min-width: 0;
+  /* Prevent flex item from overflowing */
 }
 
 .top-bar {
@@ -168,13 +178,16 @@ body {
 
 /* Mobile Layout Adjustments */
 @media (max-width: 431px) {
-  .main-content {
+  .app-layout {
     /* No navbar on mobile, so no top margin needed */
     margin-top: 0;
     /* Player bar + Mobile tabbar */
     margin-bottom: calc(var(--mobile-player-height) + var(--mobile-tabbar-height));
     padding: var(--spacing-s);
-    padding-top: var(--spacing-s);
+  }
+
+  .main-content {
+    padding: 0;
   }
 }
 
