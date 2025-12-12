@@ -1,3 +1,24 @@
+/* =========================================
+   APP BODY LAYOUT
+   ========================================= */
+.app-body {
+    display: flex;
+    gap: var(--spacing-s);
+    padding: var(--spacing-s);
+    height: calc(100vh - 64px - var(--footer-height, 90px));
+    overflow: hidden;
+}
+
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    border-radius: var(--border-radius-m);
+    background: var(--background-base);
+}
+
+/* =========================================
+   FEATURED PLAYLISTS
+   ========================================= */
 .featured-playlists {
     padding: var(--spacing-l);
     background: linear-gradient(to bottom, rgba(92, 92, 92, 0.7) 0%, #121212 70%)
