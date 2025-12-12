@@ -50,13 +50,6 @@ export const Mixes = (subtitle: string, title: string, offset: number = 0, type:
 
     grid.innerHTML = '<p style="color: var(--text-subdued);">Cargando...</p>';
 
-    // Load content based on type
-    if (type === 'newReleases') {
-        loadNewReleases(grid, offset);
-    } else {
-        loadPlaylists(grid, offset);
-    }
-
     const prevBtn = document.createElement("button");
     prevBtn.classList.add("carousel-arrow", "carousel-arrow-prev");
     prevBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>`;
@@ -79,7 +72,18 @@ export const Mixes = (subtitle: string, title: string, offset: number = 0, type:
     nextBtn.addEventListener("click", () => grid.scrollBy({ left: scrollAmount, behavior: "smooth" }));
 
     grid.addEventListener("scroll", updateArrowVisibility);
-    setTimeout(updateArrowVisibility, 100);
+
+    // Load content based on type, then update arrows
+    const loadContent = async () => {
+        if (type === 'newReleases') {
+            await loadNewReleases(grid, offset);
+        } else {
+            await loadPlaylists(grid, offset);
+        }
+        // Update arrows after content is loaded
+        setTimeout(updateArrowVisibility, 50);
+    };
+    loadContent();
 
     carouselWrapper.appendChild(prevBtn);
     carouselWrapper.appendChild(grid);
