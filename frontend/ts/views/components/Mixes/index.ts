@@ -105,11 +105,12 @@ async function loadPlaylists(grid: HTMLElement, offset: number) {
 
         data.items.forEach((playlist, index) => {
             const mixData = {
-                id: offset + index + 1,
+                id: playlist.id,
                 title: playlist.name,
                 description: `Playlist`,
                 image: playlist.images?.[0]?.url || 'https://placehold.co/300x300/333/white?text=No+Image',
-                color: colors[(offset + index) % colors.length]
+                color: colors[(offset + index) % colors.length],
+                isPlaylist: true
             };
             grid.appendChild(MixCard(mixData));
         });
@@ -137,11 +138,12 @@ async function loadNewReleases(grid: HTMLElement, offset: number) {
         data.albums.items.forEach((album, index) => {
             const artistNames = album.artists.map(a => a.name).join(', ');
             const mixData = {
-                id: offset + index + 1,
+                id: album.id,
                 title: album.name,
                 description: artistNames,
                 image: album.images?.[0]?.url || 'https://placehold.co/300x300/333/white?text=No+Image',
-                color: colors[(offset + index) % colors.length]
+                color: colors[(offset + index) % colors.length],
+                isPlaylist: false
             };
             grid.appendChild(MixCard(mixData));
         });

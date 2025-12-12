@@ -44,7 +44,7 @@ async function loadUserPlaylists(grid: HTMLElement, container: HTMLElement) {
 
         data.items.forEach(playlist => {
             const imageUrl = playlist.images[0]?.url || 'https://placehold.co/150x150/333/white?text=No+Image';
-            const card = PlaylistCard(imageUrl, playlist.name);
+            const card = PlaylistCard(playlist.id, imageUrl, playlist.name);
             grid.appendChild(card);
             applyColorGlow(card, container);
         });
