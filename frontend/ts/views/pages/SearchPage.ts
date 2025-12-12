@@ -143,7 +143,7 @@ export const SearchPage = async (): Promise<HTMLElement> => {
     // Auto-focus on input if no query (only on mobile)
     if (!query) {
         setTimeout(() => {
-            if (window.innerWidth <= 430) {
+            if (window.innerWidth <= 431) {
                 searchInput.focus();
             }
         }, 100);
