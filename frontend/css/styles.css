@@ -8,6 +8,10 @@
   --footer-height-mobile: 80px;
   /* Footer height with controls on mobile */
   --player-height-desktop: 90px;
+  /* Mobile tabbar height */
+  --mobile-tabbar-height: 56px;
+  /* Mobile player bar height */
+  --mobile-player-height: 56px;
 
   /* ========================================= */
   /* COLOR PALETTE (Strong Colors)             */
@@ -162,6 +166,17 @@ body {
 /* RESPONSIVE                                */
 /* ========================================= */
 
+/* Mobile Layout Adjustments */
+@media (max-width: 430px) {
+  .main-content {
+    /* No navbar on mobile, so no top margin needed */
+    margin-top: 0;
+    /* Player bar + Mobile tabbar */
+    margin-bottom: calc(var(--mobile-player-height) + var(--mobile-tabbar-height));
+    padding: var(--spacing-s);
+    padding-top: var(--spacing-s);
+  }
+}
 
 
 /* ========================================= */
