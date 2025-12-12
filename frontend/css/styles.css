@@ -55,6 +55,7 @@
   --nav-width-desktop: 240px;
 
   /* Radius */
+  --border-radius-s: 4px;
   --border-radius-m: 8px;
   --border-radius-pill: 500px;
 
@@ -117,10 +118,9 @@ body {
   display: flex;
   flex-direction: column;
   margin-top: var(--header-height);
-  margin-bottom: var(--player-height-desktop);
   overflow: hidden;
-  padding: var(--spacing-s);
-  padding-top: 0;
+  padding-left: var(--spacing-s);
+  padding-right: var(--spacing-s);
 }
 
 .top-bar {

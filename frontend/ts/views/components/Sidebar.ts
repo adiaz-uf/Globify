@@ -23,36 +23,23 @@ export const Sidebar = () => {
 
     sidebar.innerHTML = `
         <div class="sidebar-header">
-            <div class="sidebar-title">
+            <button class="sidebar-title" title="Tu biblioteca">
                 <svg class="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M3 22a1 1 0 0 1-1-1V3a1 1 0 0 1 2 0v18a1 1 0 0 1-1 1zM15.5 2.134A1 1 0 0 0 14 3v18a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V6.464a1 1 0 0 0-.5-.866l-6-3.464zM9 2a1 1 0 0 0-1 1v18a1 1 0 1 0 2 0V3a1 1 0 0 0-1-1z"/>
                 </svg>
                 <span class="sidebar-title-text">Tu biblioteca</span>
-            </div>
-            <div class="sidebar-actions">
-                <button class="sidebar-btn sidebar-create" aria-label="Crear playlist">
-                    <svg viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M15.25 8a.75.75 0 0 1-.75.75H8.75v5.75a.75.75 0 0 1-1.5 0V8.75H1.5a.75.75 0 0 1 0-1.5h5.75V1.5a.75.75 0 0 1 1.5 0v5.75h5.75a.75.75 0 0 1 .75.75z"/>
-                    </svg>
-                    <span>Crear</span>
-                </button>
-                <button class="sidebar-btn sidebar-collapse" aria-label="Colapsar">
-                    <svg viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M7.596 7.304a.802.802 0 0 1 0 1.392l-6.363 3.692C.713 12.69 0 12.345 0 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
-                        <path d="M14.596 7.304a.802.802 0 0 1 0 1.392l-6.363 3.692C7.713 12.69 7 12.345 7 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
-                    </svg>
-                </button>
-            </div>
+            </button>
         </div>
         <div class="sidebar-library" id="sidebar-library">
         </div>
     `;
 
-    const collapseBtn = sidebar.querySelector('.sidebar-collapse');
-    collapseBtn?.addEventListener('click', () => {
+    const titleBtn = sidebar.querySelector('.sidebar-title') as HTMLElement;
+    titleBtn?.addEventListener('click', () => {
         isCollapsed = !isCollapsed;
         sidebar.classList.toggle('collapsed', isCollapsed);
         document.querySelector('.main-content')?.classList.toggle('sidebar-collapsed', isCollapsed);
+        titleBtn.title = isCollapsed ? 'Abrir biblioteca' : 'Tu biblioteca';
     });
 
     loadLibrary(sidebar);
