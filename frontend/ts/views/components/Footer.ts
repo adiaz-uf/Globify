@@ -131,12 +131,14 @@ const updatePlayerUI = () => {
     const playPauseBtn = document.getElementById('player-play-pause');
     if (playPauseBtn) {
         playPauseBtn.innerHTML = playerState.isPlaying ? icons.pause : icons.play;
+        playPauseBtn.title = playerState.isPlaying ? "Pausar" : "Reproducir";
     }
 
     // Update mobile play button
     const mobilePlayBtn = document.getElementById('player-mobile-play');
     if (mobilePlayBtn) {
         mobilePlayBtn.innerHTML = playerState.isPlaying ? icons.pause : icons.play;
+        mobilePlayBtn.title = playerState.isPlaying ? "Pausar" : "Reproducir";
     }
 
     // Update progress bar
@@ -183,10 +185,11 @@ const updatePlayerUI = () => {
         volumeBar.style.setProperty('--progress', `${volumeValue}%`);
     }
 
-    // Update volume icon
+    // Update volume icon and tooltip
     const volumeBtn = document.getElementById('player-volume-btn');
     if (volumeBtn) {
         volumeBtn.innerHTML = playerState.isMuted || playerState.volume === 0 ? icons.volumeMute : icons.volume;
+        volumeBtn.title = playerState.isMuted || playerState.volume === 0 ? "Activar sonido" : "Silenciar";
     }
 };
 
@@ -274,6 +277,7 @@ export const Footer = async (): Promise<HTMLElement> => {
     heartBtn.className = "control-btn control-btn-heart";
     heartBtn.id = "player-heart-btn";
     heartBtn.innerHTML = icons.heart;
+    heartBtn.title = "Guardar en tu biblioteca";
     heartBtn.addEventListener("click", () => {
         // Toggle heart state
         heartBtn.classList.toggle("active");
@@ -289,6 +293,7 @@ export const Footer = async (): Promise<HTMLElement> => {
     mobilePlayBtn.className = "control-btn control-btn-mobile-play";
     mobilePlayBtn.id = "player-mobile-play";
     mobilePlayBtn.innerHTML = isPlaying ? icons.pause : icons.play;
+    mobilePlayBtn.title = isPlaying ? "Pausar" : "Reproducir";
     mobilePlayBtn.addEventListener("click", async () => {
         try {
             if (playerState.isPlaying) {
@@ -328,6 +333,7 @@ export const Footer = async (): Promise<HTMLElement> => {
     const shuffleBtn = document.createElement("button");
     shuffleBtn.className = `control-btn control-btn-small ${playerState.isShuffle ? 'active' : ''}`;
     shuffleBtn.innerHTML = icons.shuffle;
+    shuffleBtn.title = playerState.isShuffle ? "Desactivar reproducción aleatoria" : "Activar reproducción aleatoria";
     shuffleBtn.addEventListener("click", async () => {
         try {
             const newShuffleState = !playerState.isShuffle;
@@ -343,6 +349,7 @@ export const Footer = async (): Promise<HTMLElement> => {
     const prevBtn = document.createElement("button");
     prevBtn.className = "control-btn control-btn-small";
     prevBtn.innerHTML = icons.previous;
+    prevBtn.title = "Anterior";
     prevBtn.addEventListener("click", async () => {
         try {
             await spotifyApiCall(SpotifyEndpoints.previous, 'POST');
@@ -358,6 +365,7 @@ export const Footer = async (): Promise<HTMLElement> => {
     playPauseBtn.id = "player-play-pause";
     playPauseBtn.className = "control-btn control-btn-play";
     playPauseBtn.innerHTML = isPlaying ? icons.pause : icons.play;
+    playPauseBtn.title = isPlaying ? "Pausar" : "Reproducir";
     playPauseBtn.addEventListener("click", async () => {
         try {
             if (playerState.isPlaying) {
@@ -376,6 +384,7 @@ export const Footer = async (): Promise<HTMLElement> => {
     const nextBtn = document.createElement("button");
     nextBtn.className = "control-btn control-btn-small";
     nextBtn.innerHTML = icons.next;
+    nextBtn.title = "Siguiente";
     nextBtn.addEventListener("click", async () => {
         try {
             await spotifyApiCall(SpotifyEndpoints.next, 'POST');
@@ -390,6 +399,7 @@ export const Footer = async (): Promise<HTMLElement> => {
     const repeatBtn = document.createElement("button");
     repeatBtn.className = `control-btn control-btn-small ${playerState.repeatMode !== 'off' ? 'active' : ''}`;
     repeatBtn.innerHTML = icons.repeat;
+    repeatBtn.title = playerState.repeatMode === 'off' ? "Activar repetición" : (playerState.repeatMode === 'all' ? "Activar repetición de una canción" : "Desactivar repetición");
     repeatBtn.addEventListener("click", async () => {
         try {
             const modes: ('off' | 'all' | 'one')[] = ['off', 'all', 'one'];
@@ -459,16 +469,6 @@ export const Footer = async (): Promise<HTMLElement> => {
     const rightSection = document.createElement("div");
     rightSection.className = "player-section player-right";
 
-    // Queue button
-    const queueBtn = document.createElement("button");
-    queueBtn.className = "control-btn control-btn-extra";
-    queueBtn.innerHTML = icons.queue;
-
-    // Devices button
-    const devicesBtn = document.createElement("button");
-    devicesBtn.className = "control-btn control-btn-extra";
-    devicesBtn.innerHTML = icons.devices;
-
     // Volume control
     const volumeContainer = document.createElement("div");
     volumeContainer.className = "volume-container";
@@ -477,6 +477,7 @@ export const Footer = async (): Promise<HTMLElement> => {
     volumeBtn.id = "player-volume-btn";
     volumeBtn.className = "control-btn control-btn-extra";
     volumeBtn.innerHTML = icons.volume;
+    volumeBtn.title = playerState.isMuted ? "Activar sonido" : "Silenciar";
     volumeBtn.addEventListener("click", async () => {
         try {
             const newMutedState = !playerState.isMuted;
@@ -515,9 +516,8 @@ export const Footer = async (): Promise<HTMLElement> => {
     const fullscreenBtn = document.createElement("button");
     fullscreenBtn.className = "control-btn control-btn-extra";
     fullscreenBtn.innerHTML = icons.fullscreen;
+    fullscreenBtn.title = "Pantalla completa";
 
-    rightSection.appendChild(queueBtn);
-    rightSection.appendChild(devicesBtn);
     rightSection.appendChild(volumeContainer);
     rightSection.appendChild(fullscreenBtn);
 
