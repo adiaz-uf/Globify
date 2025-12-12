@@ -236,58 +236,85 @@
 }
 
 /* ============================================
+   MOBILE TABBAR STYLES
+   Bottom navigation bar for mobile devices
+   ============================================ */
+
+.mobile-tabbar {
+    display: none;
+    /* Hidden on desktop */
+}
+
+/* ============================================
    RESPONSIVE - Mobile
    ============================================ */
 
 @media (max-width: 430px) {
+
+    /* Hide desktop navbar on mobile */
     .global-nav-bar {
-        padding: 0 var(--spacing-m);
+        display: none;
     }
 
-    .global-nav-bar .logo svg {
-        width: 28px;
-        height: 28px;
+    /* Show mobile tabbar */
+    .mobile-tabbar {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: var(--mobile-tabbar-height);
+        background-color: var(--bg-base);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        align-items: center;
+        justify-content: space-around;
+        padding: 0 var(--spacing-s);
+        z-index: var(--z-sticky-header);
     }
 
-    .nav-center {
-        gap: var(--spacing-s);
+    .mobile-tab-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 8px 16px;
+        text-decoration: none;
+        color: var(--text-subdued);
+        transition: color 0.2s ease;
+        flex: 1;
+        max-width: 100px;
     }
 
-    .search-container {
-        max-width: 180px;
+    .mobile-tab-item:hover {
+        color: var(--text-base);
     }
 
-    .search-button {
-        width: 36px;
-        height: 40px;
+    .mobile-tab-item.active {
+        color: var(--text-base);
     }
 
-    .search-button svg {
-        width: 16px;
-        height: 16px;
+    .mobile-tab-icon {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .search-input {
-        height: 40px;
-        font-size: var(--text-xs);
+    .mobile-tab-icon svg {
+        width: 24px;
+        height: 24px;
+        fill: currentColor;
     }
 
-    .search-input::placeholder {
-        font-size: var(--text-xs);
+    .mobile-tab-label {
+        font-size: 10px;
+        font-weight: var(--font-weight-regular);
+        white-space: nowrap;
     }
 
-    .global-nav-bar ul li a {
-        width: 40px;
-        height: 40px;
-    }
-
-    .global-nav-bar ul li a .nav-icon {
-        width: 20px;
-        height: 20px;
-    }
-
-    .global-nav-bar ul li a .nav-icon svg {
-        width: 20px;
-        height: 20px;
+    .mobile-tab-item.active .mobile-tab-label {
+        font-weight: var(--font-weight-bold);
     }
 }

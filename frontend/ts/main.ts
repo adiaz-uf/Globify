@@ -1,6 +1,6 @@
 import { navigateTo, render } from "@/utils/router.js";
 import { redirectToSpotifyLogin, handleLoginCallback, isAuthenticated, logout } from './api/spotifyAuth.js';
-import { Navbar, updateNavbarActiveState } from './views/components/Navbar.js';
+import { Navbar, updateNavbarActiveState, MobileTabbar, updateMobileTabbarActiveState } from './views/components/Navbar.js';
 import { Footer } from './views/components/Footer.js';
 
 async function initApp() {
@@ -99,10 +99,18 @@ async function renderAuthenticatedApp() {
         footerContainer.appendChild(await Footer());
     }
 
+    // Insert Mobile Tabbar component into container (for mobile view)
+    const mobileTabbarContainer = document.getElementById('mobile-tabbar-container');
+    if (mobileTabbarContainer) {
+        mobileTabbarContainer.innerHTML = '';
+        mobileTabbarContainer.appendChild(MobileTabbar());
+    }
+
     // Handle browser back/forward buttons and update navbar active state
     window.addEventListener('popstate', () => {
         render();
         updateNavbarActiveState();
+        updateMobileTabbarActiveState();
     });
 
     // Render current route

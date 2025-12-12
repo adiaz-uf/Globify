@@ -1,4 +1,4 @@
-import { updateNavbarActiveState } from "@/views/components/Navbar.js";
+import { updateNavbarActiveState, updateMobileTabbarActiveState } from "@/views/components/Navbar.js";
 import { HomePage } from "@/views/pages/HomePage.js";
 import { NotFoundPage } from "@/views/pages/NotFoundPage.js";
 
@@ -62,6 +62,7 @@ export const render = async () => {
             : NotFoundPage();
         container.appendChild(viewElement);
         updateNavbarActiveState();
+        updateMobileTabbarActiveState();
     } catch (error) {
         console.error('Error loading page:', error);
         container.innerHTML = "<h1>Error crítico cargando la aplicación</h1>";

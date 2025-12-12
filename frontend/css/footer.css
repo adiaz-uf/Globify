@@ -351,7 +351,7 @@
 
 @media (max-width: 430px) {
     .player-bar {
-        height: 56px;
+        height: var(--mobile-player-height);
         padding: var(--spacing-s) var(--spacing-m);
         background-color: var(--player-bg-color, #282828);
         border-top: none;
@@ -360,7 +360,8 @@
         position: fixed;
         left: 0;
         right: 0;
-        bottom: 0;
+        /* Position above the mobile tabbar */
+        bottom: var(--mobile-tabbar-height);
         transition: background-color 0.5s ease;
     }
 

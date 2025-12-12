@@ -1,5 +1,6 @@
 import { spotifyApiCall } from "@/api/spotifyClient.js";
 import { SpotifyEndpoints } from "@/api/endpoints.js";
+import { navigateTo } from "@/utils/router.js";
 
 interface Track {
     id: string;
@@ -50,6 +51,9 @@ const formatDuration = (ms: number): string => {
 
 const defaultCover = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect fill='%23282828' width='80' height='80'/%3E%3Ccircle cx='40' cy='40' r='20' fill='%23535353'/%3E%3C/svg%3E";
 
+// Search icon SVG
+const searchIconSvg = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.533 1.279c-5.18 0-9.407 4.14-9.407 9.279s4.226 9.279 9.407 9.279c2.234 0 4.29-.77 5.907-2.058l4.353 4.353a1 1 0 1 0 1.414-1.414l-4.344-4.344a9.157 9.157 0 0 0 2.077-5.816c0-5.14-4.226-9.28-9.407-9.28zm-7.407 9.279c0-4.006 3.302-7.28 7.407-7.28s7.407 3.274 7.407 7.28-3.302 7.279-7.407 7.279-7.407-3.273-7.407-7.28z"/></svg>`;
+
 export const SearchPage = async (): Promise<HTMLElement> => {
     const container = document.createElement("div");
     container.className = "search-page";
@@ -58,16 +62,55 @@ export const SearchPage = async (): Promise<HTMLElement> => {
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get('q') || '';
 
-    // Header
-    const header = document.createElement("div");
-    header.className = "search-header";
+    // Mobile Search Input (shown at top on mobile)
+    const mobileSearchWrapper = document.createElement("div");
+    mobileSearchWrapper.className = "mobile-search-wrapper";
 
-    const title = document.createElement("h1");
-    title.className = "search-title";
-    title.textContent = query ? `Resultados para "${query}"` : "Buscar";
+    const searchInputContainer = document.createElement("div");
+    searchInputContainer.className = "search-page-input-container";
 
-    header.appendChild(title);
-    container.appendChild(header);
+    const searchIcon = document.createElement("span");
+    searchIcon.className = "search-page-icon";
+    searchIcon.innerHTML = searchIconSvg;
+    searchInputContainer.appendChild(searchIcon);
+
+    const searchInput = document.createElement("input");
+    searchInput.type = "text";
+    searchInput.id = "search-page-input";
+    searchInput.className = "search-page-input";
+    searchInput.placeholder = "¿Qué quieres escuchar?";
+    searchInput.value = query; // Pre-fill with current query
+    searchInput.autocomplete = "off";
+    searchInput.setAttribute("autocapitalize", "off");
+    searchInput.setAttribute("autocorrect", "off");
+    searchInput.setAttribute("spellcheck", "false");
+
+    // Handle Enter key to search
+    searchInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            const newQuery = searchInput.value.trim();
+            if (newQuery) {
+                navigateTo(`/search?q=${encodeURIComponent(newQuery)}`);
+            }
+        }
+    });
+
+    searchInputContainer.appendChild(searchInput);
+    mobileSearchWrapper.appendChild(searchInputContainer);
+    container.appendChild(mobileSearchWrapper);
+
+    // Header (shows results title when there's a query)
+    if (query) {
+        const header = document.createElement("div");
+        header.className = "search-header";
+
+        const title = document.createElement("h1");
+        title.className = "search-title";
+        title.textContent = `Resultados para "${query}"`;
+
+        header.appendChild(title);
+        container.appendChild(header);
+    }
 
     // Results container
     const resultsContainer = document.createElement("div");
@@ -95,6 +138,15 @@ export const SearchPage = async (): Promise<HTMLElement> => {
         // Show browse categories or recent searches
         resultsContainer.innerHTML = '<div class="search-empty">Escribe algo para buscar canciones, artistas, álbumes o playlists.</div>';
         container.appendChild(resultsContainer);
+    }
+
+    // Auto-focus on input if no query (only on mobile)
+    if (!query) {
+        setTimeout(() => {
+            if (window.innerWidth <= 430) {
+                searchInput.focus();
+            }
+        }, 100);
     }
 
     return container;

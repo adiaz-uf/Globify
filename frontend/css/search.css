@@ -7,6 +7,65 @@
     padding-bottom: calc(var(--player-height-desktop) + var(--spacing-xl));
 }
 
+/* ============================================
+   MOBILE SEARCH INPUT (at top of page)
+   ============================================ */
+
+.mobile-search-wrapper {
+    display: none;
+    /* Hidden on desktop */
+}
+
+.search-page-input-container {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-base);
+    border-radius: var(--border-radius-m);
+    padding: 0 var(--spacing-m);
+    height: 48px;
+    gap: var(--spacing-s);
+}
+
+.search-page-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-subdued);
+    flex-shrink: 0;
+}
+
+.search-page-icon svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+.search-page-input {
+    flex: 1;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text-base);
+    font-family: var(--font-family);
+    font-size: var(--text-md);
+    outline: none;
+}
+
+.search-page-input::placeholder {
+    color: var(--text-subdued);
+}
+
+/* Override browser autofill styles */
+.search-page-input:-webkit-autofill,
+.search-page-input:-webkit-autofill:hover,
+.search-page-input:-webkit-autofill:focus,
+.search-page-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px var(--bg-base) inset !important;
+    -webkit-text-fill-color: var(--text-base) !important;
+    background-color: var(--bg-base) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
 /* Header */
 .search-header {
     margin-bottom: var(--spacing-xl);
@@ -377,7 +436,25 @@
 @media (max-width: 430px) {
     .search-page {
         padding: var(--spacing-m);
+        padding-top: 0;
         padding-bottom: calc(var(--footer-height-mobile) + var(--spacing-xl));
+    }
+
+    /* Show mobile search wrapper */
+    .mobile-search-wrapper {
+        display: block;
+        padding: var(--spacing-m) 0;
+        position: sticky;
+        top: 0;
+        background: var(--bg-elevated-base);
+        z-index: 10;
+        margin: 0 calc(-1 * var(--spacing-m));
+        padding-left: var(--spacing-m);
+        padding-right: var(--spacing-m);
+    }
+
+    .search-page-input-container {
+        background-color: var(--bg-highlight);
     }
 
     .search-title {
