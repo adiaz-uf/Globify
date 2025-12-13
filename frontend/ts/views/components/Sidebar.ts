@@ -36,13 +36,18 @@ export const toggleSidebar = (): void => {
     const sidebar = document.querySelector('.now-playing-sidebar');
     const collapsedToggle = document.querySelector('.sidebar-collapsed-toggle');
 
+    console.log('toggleSidebar called', { sidebar, collapsedToggle, sidebarVisible });
+
     if (sidebar) {
         sidebarVisible = !sidebarVisible;
         sidebar.classList.toggle('collapsed', !sidebarVisible);
 
+        console.log('Sidebar collapsed:', !sidebarVisible);
+
         // Show/hide the collapsed toggle button
         if (collapsedToggle) {
             collapsedToggle.classList.toggle('visible', !sidebarVisible);
+            console.log('Toggle visible class:', !sidebarVisible);
         }
     }
 };
@@ -55,10 +60,17 @@ export const updateSidebar = async (trackData: any): Promise<void> => {
 
     // Update cover
     const coverEl = document.getElementById('sidebar-cover') as HTMLImageElement;
+    const collapsedCoverEl = document.getElementById('sidebar-collapsed-cover') as HTMLImageElement;
+    const coverUrl = trackData.album?.images?.[0]?.url || defaultCover;
+
     if (coverEl) {
-        const coverUrl = trackData.album?.images?.[0]?.url || defaultCover;
         coverEl.src = coverUrl;
         coverEl.alt = `${trackData.name} - ${trackData.artists?.[0]?.name || 'Unknown'}`;
+    }
+
+    // Update collapsed cover
+    if (collapsedCoverEl) {
+        collapsedCoverEl.src = coverUrl;
     }
 
     // Update track name
@@ -334,12 +346,21 @@ export const Sidebar = async (): Promise<HTMLElement> => {
     const collapsedToggle = document.createElement("div");
     collapsedToggle.className = "sidebar-collapsed-toggle";
 
+    // Mini cover preview
+    const collapsedCover = document.createElement("img");
+    collapsedCover.id = "sidebar-collapsed-cover";
+    collapsedCover.className = "sidebar-collapsed-cover";
+    collapsedCover.src = trackData?.album?.images?.[0]?.url || defaultCover;
+    collapsedCover.alt = "Expandir panel";
+    collapsedCover.addEventListener("click", toggleSidebar);
+
     const expandBtn = document.createElement("button");
     expandBtn.className = "sidebar-toggle-btn";
     expandBtn.innerHTML = `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M11.03 3.47a.75.75 0 0 1 0 1.06L8.56 7H14.5a.75.75 0 0 1 0 1.5H8.56l2.47 2.47a.75.75 0 1 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 0z"/></svg>`;
     expandBtn.title = "Mostrar panel de reproducción";
     expandBtn.addEventListener("click", toggleSidebar);
 
+    collapsedToggle.appendChild(collapsedCover);
     collapsedToggle.appendChild(expandBtn);
 
     // Create wrapper to hold both sidebar and collapsed toggle

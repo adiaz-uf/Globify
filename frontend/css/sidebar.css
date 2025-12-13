@@ -14,6 +14,13 @@
     display: none;
 }
 
+/* Wrapper that contains sidebar and collapsed toggle */
+.sidebar-wrapper {
+    display: flex;
+    height: 100%;
+    flex-shrink: 0;
+}
+
 /* Sidebar container */
 .now-playing-sidebar {
     width: 350px;
@@ -46,16 +53,36 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding-top: var(--spacing-m);
-    width: 48px;
+    padding: var(--spacing-m);
+    width: 64px;
+    min-width: 64px;
     height: 100%;
     background-color: var(--bg-elevated-base);
     border-radius: var(--border-radius-m);
+    gap: var(--spacing-s);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    cursor: pointer;
 }
 
+/* Show when sidebar is collapsed (via CSS adjacent selector or JS class) */
 .now-playing-sidebar.collapsed+.sidebar-collapsed-toggle,
 .sidebar-collapsed-toggle.visible {
-    display: flex;
+    display: flex !important;
+}
+
+/* Mini cover preview in collapsed state */
+.sidebar-collapsed-cover {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--border-radius-s);
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease;
+}
+
+.sidebar-collapsed-toggle:hover .sidebar-collapsed-cover {
+    transform: scale(1.05);
 }
 
 /* Toggle button */
@@ -63,9 +90,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-right: 0.5em;
     width: 40px;
     height: 40px;
-    background: transparent;
+    background: rgba(255, 255, 255, 0.1);
     border: none;
     border-radius: 50%;
     cursor: pointer;
@@ -74,8 +102,9 @@
 }
 
 .sidebar-toggle-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.2);
     color: var(--text-base);
+    transform: scale(1.1);
 }
 
 .sidebar-toggle-btn svg {
