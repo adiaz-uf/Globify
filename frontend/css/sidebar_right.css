@@ -1,28 +1,28 @@
 /* ============================================
-   NOW PLAYING SIDEBAR - Spotify Style
-   Right sidebar that shows current track info
+   NOW PLAYING sidebar_right - Spotify Style
+   Right sidebar_right that shows current track info
    ============================================ */
 
-/* Sidebar wrapper - always visible */
-#sidebar-container {
+/* sidebar_right wrapper - always visible */
+#sidebar_right-container {
     flex-shrink: 0;
     display: flex;
     height: 100%;
 }
 
-#sidebar-container:empty {
+#sidebar_right-container:empty {
     display: none;
 }
 
-/* Wrapper that contains sidebar and collapsed toggle */
-.sidebar-wrapper {
+/* Wrapper that contains sidebar_right and collapsed toggle */
+.sidebar_right-wrapper {
     display: flex;
     height: 100%;
     flex-shrink: 0;
 }
 
-/* Sidebar container */
-.now-playing-sidebar {
+/* sidebar_right container */
+.now-playing-sidebar_right {
     width: 350px;
     height: 100%;
     background-color: var(--bg-elevated-base);
@@ -34,21 +34,21 @@
     position: relative;
 }
 
-/* When sidebar is collapsed */
-.now-playing-sidebar.collapsed {
+/* When sidebar_right is collapsed */
+.now-playing-sidebar_right.collapsed {
     width: 0;
     min-width: 0;
     padding: 0;
 }
 
-.now-playing-sidebar.collapsed .sidebar-header,
-.now-playing-sidebar.collapsed .sidebar-content {
+.now-playing-sidebar_right.collapsed .sidebar_right-header,
+.now-playing-sidebar_right.collapsed .sidebar_right-content {
     opacity: 0;
     visibility: hidden;
 }
 
-/* Collapsed toggle button - shows when sidebar is collapsed */
-.sidebar-collapsed-toggle {
+/* Collapsed toggle button - shows when sidebar_right is collapsed */
+.sidebar_right-collapsed-toggle {
     display: none;
     flex-direction: column;
     align-items: center;
@@ -65,14 +65,14 @@
     cursor: pointer;
 }
 
-/* Show when sidebar is collapsed (via CSS adjacent selector or JS class) */
-.now-playing-sidebar.collapsed+.sidebar-collapsed-toggle,
-.sidebar-collapsed-toggle.visible {
+/* Show when sidebar_right is collapsed (via CSS adjacent selector or JS class) */
+.now-playing-sidebar_right.collapsed+.sidebar_right-collapsed-toggle,
+.sidebar_right-collapsed-toggle.visible {
     display: flex !important;
 }
 
 /* Mini cover preview in collapsed state */
-.sidebar-collapsed-cover {
+.sidebar_right-collapsed-cover {
     width: 48px;
     height: 48px;
     border-radius: var(--border-radius-s);
@@ -81,12 +81,12 @@
     transition: transform 0.2s ease;
 }
 
-.sidebar-collapsed-toggle:hover .sidebar-collapsed-cover {
+.sidebar_right-collapsed-toggle:hover .sidebar_right-collapsed-cover {
     transform: scale(1.05);
 }
 
 /* Toggle button */
-.sidebar-toggle-btn {
+.sidebar_right-toggle-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -101,23 +101,23 @@
     transition: all 0.2s ease;
 }
 
-.sidebar-toggle-btn:hover {
+.sidebar_right-toggle-btn:hover {
     background: rgba(255, 255, 255, 0.2);
     color: var(--text-base);
     transform: scale(1.1);
 }
 
-.sidebar-toggle-btn svg {
+.sidebar_right-toggle-btn svg {
     width: 20px;
     height: 20px;
     fill: currentColor;
 }
 
 /* ============================================
-   SIDEBAR HEADER
+   sidebar_right HEADER
    ============================================ */
 
-.sidebar-header {
+.sidebar_right-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -125,13 +125,13 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.sidebar-title {
+.sidebar_right-title {
     font-size: var(--text-sm);
     font-weight: var(--font-weight-bold);
     color: var(--text-base);
 }
 
-.sidebar-close {
+.sidebar_right-close {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -145,22 +145,22 @@
     transition: all 0.2s ease;
 }
 
-.sidebar-close:hover {
+.sidebar_right-close:hover {
     background: rgba(255, 255, 255, 0.1);
     color: var(--text-base);
 }
 
-.sidebar-close svg {
+.sidebar_right-close svg {
     width: 16px;
     height: 16px;
     fill: currentColor;
 }
 
 /* ============================================
-   SIDEBAR CONTENT (Scrollable)
+   sidebar_right CONTENT (Scrollable)
    ============================================ */
 
-.sidebar-content {
+.sidebar_right-content {
     flex: 1;
     overflow-y: auto;
     padding: var(--spacing-m);
@@ -169,20 +169,20 @@
     gap: var(--spacing-l);
 }
 
-.sidebar-content::-webkit-scrollbar {
+.sidebar_right-content::-webkit-scrollbar {
     width: 8px;
 }
 
-.sidebar-content::-webkit-scrollbar-thumb {
+.sidebar_right-content::-webkit-scrollbar-thumb {
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 4px;
 }
 
-.sidebar-content::-webkit-scrollbar-thumb:hover {
+.sidebar_right-content::-webkit-scrollbar-thumb:hover {
     background-color: rgba(255, 255, 255, 0.3);
 }
 
-.sidebar-content::-webkit-scrollbar-track {
+.sidebar_right-content::-webkit-scrollbar-track {
     background: transparent;
 }
 
@@ -190,7 +190,7 @@
    ALBUM COVER SECTION
    ============================================ */
 
-.sidebar-cover-container {
+.sidebar_right-cover-container {
     position: relative;
     width: 100%;
     aspect-ratio: 1;
@@ -199,7 +199,7 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
-.sidebar-cover {
+.sidebar_right-cover {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -209,25 +209,25 @@
    TRACK INFO SECTION
    ============================================ */
 
-.sidebar-track-info {
+.sidebar_right-track-info {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-s);
 }
 
-.sidebar-track-header {
+.sidebar_right-track-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: var(--spacing-m);
 }
 
-.sidebar-track-details {
+.sidebar_right-track-details {
     flex: 1;
     min-width: 0;
 }
 
-.sidebar-track-name {
+.sidebar_right-track-name {
     font-size: var(--text-lg);
     font-weight: var(--font-weight-bold);
     color: var(--text-base);
@@ -239,7 +239,7 @@
     overflow: hidden;
 }
 
-.sidebar-track-artist {
+.sidebar_right-track-artist {
     font-size: var(--text-md);
     color: var(--text-subdued);
     margin: 0;
@@ -247,13 +247,13 @@
     transition: color 0.2s ease;
 }
 
-.sidebar-track-artist:hover {
+.sidebar_right-track-artist:hover {
     color: var(--text-base);
     text-decoration: underline;
 }
 
-/* Like button in sidebar */
-.sidebar-like-btn {
+/* Like button in sidebar_right */
+.sidebar_right-like-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -267,16 +267,16 @@
     flex-shrink: 0;
 }
 
-.sidebar-like-btn:hover {
+.sidebar_right-like-btn:hover {
     color: var(--text-base);
     transform: scale(1.1);
 }
 
-.sidebar-like-btn.active {
+.sidebar_right-like-btn.active {
     color: var(--green-main);
 }
 
-.sidebar-like-btn svg {
+.sidebar_right-like-btn svg {
     width: 24px;
     height: 24px;
     fill: currentColor;
@@ -286,7 +286,7 @@
    ABOUT THE ARTIST SECTION
    ============================================ */
 
-.sidebar-section {
+.sidebar_right-section {
     background: rgba(255, 255, 255, 0.05);
     border-radius: var(--border-radius-m);
     padding: var(--spacing-m);
@@ -295,20 +295,20 @@
     gap: var(--spacing-m);
 }
 
-.sidebar-section-header {
+.sidebar_right-section-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.sidebar-section-title {
+.sidebar_right-section-title {
     font-size: var(--text-sm);
     font-weight: var(--font-weight-bold);
     color: var(--text-base);
     margin: 0;
 }
 
-.sidebar-section-link {
+.sidebar_right-section-link {
     font-size: var(--text-xs);
     color: var(--text-subdued);
     text-decoration: none;
@@ -316,13 +316,13 @@
     transition: color 0.2s ease;
 }
 
-.sidebar-section-link:hover {
+.sidebar_right-section-link:hover {
     color: var(--text-base);
     text-decoration: underline;
 }
 
 /* Artist card */
-.sidebar-artist-card {
+.sidebar_right-artist-card {
     display: flex;
     align-items: center;
     gap: var(--spacing-m);
@@ -330,23 +330,23 @@
     transition: opacity 0.2s ease;
 }
 
-.sidebar-artist-card:hover {
+.sidebar_right-artist-card:hover {
     opacity: 0.8;
 }
 
-.sidebar-artist-image {
+.sidebar_right-artist-image {
     width: 64px;
     height: 64px;
     border-radius: 50%;
     object-fit: cover;
 }
 
-.sidebar-artist-info {
+.sidebar_right-artist-info {
     flex: 1;
     min-width: 0;
 }
 
-.sidebar-artist-name {
+.sidebar_right-artist-name {
     font-size: var(--text-sm);
     font-weight: var(--font-weight-bold);
     color: var(--text-base);
@@ -356,14 +356,14 @@
     text-overflow: ellipsis;
 }
 
-.sidebar-artist-followers {
+.sidebar_right-artist-followers {
     font-size: var(--text-xs);
     color: var(--text-subdued);
     margin: 0;
 }
 
 /* Artist follow button */
-.sidebar-follow-btn {
+.sidebar_right-follow-btn {
     padding: 6px 16px;
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -376,12 +376,12 @@
     flex-shrink: 0;
 }
 
-.sidebar-follow-btn:hover {
+.sidebar_right-follow-btn:hover {
     border-color: var(--text-base);
     transform: scale(1.05);
 }
 
-.sidebar-follow-btn.following {
+.sidebar_right-follow-btn.following {
     background: transparent;
     border-color: var(--green-main);
     color: var(--green-main);
@@ -391,31 +391,31 @@
    CREDITS SECTION
    ============================================ */
 
-.sidebar-credits {
+.sidebar_right-credits {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-s);
 }
 
-.sidebar-credit-item {
+.sidebar_right-credit-item {
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
 
-.sidebar-credit-role {
+.sidebar_right-credit-role {
     font-size: var(--text-xs);
     color: var(--text-subdued);
 }
 
-.sidebar-credit-name {
+.sidebar_right-credit-name {
     font-size: var(--text-sm);
     color: var(--text-base);
     cursor: pointer;
     transition: text-decoration 0.2s ease;
 }
 
-.sidebar-credit-name:hover {
+.sidebar_right-credit-name:hover {
     text-decoration: underline;
 }
 
@@ -423,7 +423,7 @@
    NEXT IN QUEUE SECTION
    ============================================ */
 
-.sidebar-queue-item {
+.sidebar_right-queue-item {
     display: flex;
     align-items: center;
     gap: var(--spacing-m);
@@ -433,23 +433,23 @@
     transition: background 0.2s ease;
 }
 
-.sidebar-queue-item:hover {
+.sidebar_right-queue-item:hover {
     background: rgba(255, 255, 255, 0.1);
 }
 
-.sidebar-queue-cover {
+.sidebar_right-queue-cover {
     width: 48px;
     height: 48px;
     border-radius: 4px;
     object-fit: cover;
 }
 
-.sidebar-queue-info {
+.sidebar_right-queue-info {
     flex: 1;
     min-width: 0;
 }
 
-.sidebar-queue-name {
+.sidebar_right-queue-name {
     font-size: var(--text-sm);
     color: var(--green-main);
     margin: 0;
@@ -458,7 +458,7 @@
     text-overflow: ellipsis;
 }
 
-.sidebar-queue-artist {
+.sidebar_right-queue-artist {
     font-size: var(--text-xs);
     color: var(--text-subdued);
     margin: 0;
@@ -472,7 +472,7 @@
    ============================================ */
 
 @media (max-width: 1024px) {
-    .now-playing-sidebar {
+    .now-playing-sidebar_right {
         width: 300px;
     }
 }
@@ -482,11 +482,11 @@
    ============================================ */
 
 @media (max-width: 768px) {
-    .now-playing-sidebar {
+    .now-playing-sidebar_right {
         display: none;
     }
 
-    #sidebar-container {
+    #sidebar_right-container {
         display: none;
     }
 }

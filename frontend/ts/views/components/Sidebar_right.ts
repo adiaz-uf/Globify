@@ -15,8 +15,8 @@ const defaultCover = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
 // Default artist placeholder
 const defaultArtistImage = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect fill='%23282828' width='80' height='80'/%3E%3Ccircle cx='40' cy='35' r='15' fill='%23535353'/%3E%3Cellipse cx='40' cy='65' rx='25' ry='15' fill='%23535353'/%3E%3C/svg%3E";
 
-// Sidebar state
-let sidebarVisible = true;
+// sidebar_right state
+let sidebar_rightVisible = true;
 let currentTrackData: any = null;
 let currentArtistData: any = null;
 
@@ -31,36 +31,36 @@ const formatNumber = (num: number): string => {
     return num.toString();
 };
 
-// Toggle sidebar visibility
-export const toggleSidebar = (): void => {
-    const sidebar = document.querySelector('.now-playing-sidebar');
-    const collapsedToggle = document.querySelector('.sidebar-collapsed-toggle');
+// Toggle sidebar_right visibility
+export const togglesidebar_right = (): void => {
+    const sidebar_right = document.querySelector('.now-playing-sidebar_right');
+    const collapsedToggle = document.querySelector('.sidebar_right-collapsed-toggle');
 
-    console.log('toggleSidebar called', { sidebar, collapsedToggle, sidebarVisible });
+    console.log('togglesidebar_right called', { sidebar_right, collapsedToggle, sidebar_rightVisible });
 
-    if (sidebar) {
-        sidebarVisible = !sidebarVisible;
-        sidebar.classList.toggle('collapsed', !sidebarVisible);
+    if (sidebar_right) {
+        sidebar_rightVisible = !sidebar_rightVisible;
+        sidebar_right.classList.toggle('collapsed', !sidebar_rightVisible);
 
-        console.log('Sidebar collapsed:', !sidebarVisible);
+        console.log('sidebar_right collapsed:', !sidebar_rightVisible);
 
         // Show/hide the collapsed toggle button
         if (collapsedToggle) {
-            collapsedToggle.classList.toggle('visible', !sidebarVisible);
-            console.log('Toggle visible class:', !sidebarVisible);
+            collapsedToggle.classList.toggle('visible', !sidebar_rightVisible);
+            console.log('Toggle visible class:', !sidebar_rightVisible);
         }
     }
 };
 
-// Update sidebar with current track data
-export const updateSidebar = async (trackData: any): Promise<void> => {
+// Update sidebar_right with current track data
+export const updatesidebar_right = async (trackData: any): Promise<void> => {
     if (!trackData) return;
 
     currentTrackData = trackData;
 
     // Update cover
-    const coverEl = document.getElementById('sidebar-cover') as HTMLImageElement;
-    const collapsedCoverEl = document.getElementById('sidebar-collapsed-cover') as HTMLImageElement;
+    const coverEl = document.getElementById('sidebar_right-cover') as HTMLImageElement;
+    const collapsedCoverEl = document.getElementById('sidebar_right-collapsed-cover') as HTMLImageElement;
     const coverUrl = trackData.album?.images?.[0]?.url || defaultCover;
 
     if (coverEl) {
@@ -74,13 +74,13 @@ export const updateSidebar = async (trackData: any): Promise<void> => {
     }
 
     // Update track name
-    const trackNameEl = document.getElementById('sidebar-track-name');
+    const trackNameEl = document.getElementById('sidebar_right-track-name');
     if (trackNameEl) {
         trackNameEl.textContent = trackData.name || 'Unknown Track';
     }
 
     // Update artist name
-    const artistNameEl = document.getElementById('sidebar-artist-name');
+    const artistNameEl = document.getElementById('sidebar_right-artist-name');
     if (artistNameEl) {
         artistNameEl.textContent = trackData.artists?.map((a: any) => a.name).join(', ') || 'Unknown Artist';
     }
@@ -97,32 +97,32 @@ export const updateSidebar = async (trackData: any): Promise<void> => {
     }
 };
 
-// Update artist section in sidebar
+// Update artist section in sidebar_right
 const updateArtistSection = (artistData: any): void => {
     // Update artist image
-    const artistImgEl = document.getElementById('sidebar-artist-img') as HTMLImageElement;
+    const artistImgEl = document.getElementById('sidebar_right-artist-img') as HTMLImageElement;
     if (artistImgEl) {
         artistImgEl.src = artistData.images?.[0]?.url || defaultArtistImage;
         artistImgEl.alt = artistData.name;
     }
 
     // Update artist name in section
-    const artistSectionNameEl = document.getElementById('sidebar-artist-section-name');
+    const artistSectionNameEl = document.getElementById('sidebar_right-artist-section-name');
     if (artistSectionNameEl) {
         artistSectionNameEl.textContent = artistData.name;
     }
 
     // Update followers count
-    const followersEl = document.getElementById('sidebar-artist-followers');
+    const followersEl = document.getElementById('sidebar_right-artist-followers');
     if (followersEl) {
         followersEl.textContent = `${formatNumber(artistData.followers?.total || 0)} seguidores`;
     }
 };
 
-// Create sidebar component
-export const Sidebar = async (): Promise<HTMLElement> => {
-    const sidebar = document.createElement("aside");
-    sidebar.className = "now-playing-sidebar";
+// Create sidebar_right component
+export const Sidebar_right = async (): Promise<HTMLElement> => {
+    const sidebar_right = document.createElement("aside");
+    sidebar_right.className = "now-playing-sidebar_right";
 
     // Fetch current player state
     let trackData: any = null;
@@ -139,37 +139,37 @@ export const Sidebar = async (): Promise<HTMLElement> => {
             currentArtistData = artistData;
         }
     } catch (error) {
-        console.error('Error fetching sidebar data:', error);
+        console.error('Error fetching sidebar_right data:', error);
     }
 
     // ========== HEADER ==========
     const header = document.createElement("div");
-    header.className = "sidebar-header";
+    header.className = "sidebar_right-header";
 
     const title = document.createElement("span");
-    title.className = "sidebar-title";
+    title.className = "sidebar_right-title";
     title.textContent = trackData?.album?.name || "Reproduciendo ahora";
 
     const closeBtn = document.createElement("button");
-    closeBtn.className = "sidebar-close";
+    closeBtn.className = "sidebar_right-close";
     closeBtn.innerHTML = icons.close;
     closeBtn.title = "Cerrar";
-    closeBtn.addEventListener("click", toggleSidebar);
+    closeBtn.addEventListener("click", togglesidebar_right);
 
     header.appendChild(title);
     header.appendChild(closeBtn);
 
     // ========== CONTENT ==========
     const content = document.createElement("div");
-    content.className = "sidebar-content";
+    content.className = "sidebar_right-content";
 
     // Album cover
     const coverContainer = document.createElement("div");
-    coverContainer.className = "sidebar-cover-container";
+    coverContainer.className = "sidebar_right-cover-container";
 
     const cover = document.createElement("img");
-    cover.id = "sidebar-cover";
-    cover.className = "sidebar-cover";
+    cover.id = "sidebar_right-cover";
+    cover.className = "sidebar_right-cover";
     cover.src = trackData?.album?.images?.[0]?.url || defaultCover;
     cover.alt = trackData ? `${trackData.name} - ${trackData.artists?.[0]?.name}` : "No track playing";
 
@@ -178,22 +178,22 @@ export const Sidebar = async (): Promise<HTMLElement> => {
 
     // Track info section
     const trackInfo = document.createElement("div");
-    trackInfo.className = "sidebar-track-info";
+    trackInfo.className = "sidebar_right-track-info";
 
     const trackHeader = document.createElement("div");
-    trackHeader.className = "sidebar-track-header";
+    trackHeader.className = "sidebar_right-track-header";
 
     const trackDetails = document.createElement("div");
-    trackDetails.className = "sidebar-track-details";
+    trackDetails.className = "sidebar_right-track-details";
 
     const trackName = document.createElement("h2");
-    trackName.id = "sidebar-track-name";
-    trackName.className = "sidebar-track-name";
+    trackName.id = "sidebar_right-track-name";
+    trackName.className = "sidebar_right-track-name";
     trackName.textContent = trackData?.name || "Elige una canción";
 
     const artistName = document.createElement("p");
-    artistName.id = "sidebar-artist-name";
-    artistName.className = "sidebar-track-artist";
+    artistName.id = "sidebar_right-artist-name";
+    artistName.className = "sidebar_right-track-artist";
     artistName.textContent = trackData?.artists?.map((a: any) => a.name).join(', ') || "";
 
     trackDetails.appendChild(trackName);
@@ -201,7 +201,7 @@ export const Sidebar = async (): Promise<HTMLElement> => {
 
     // Like button
     const likeBtn = document.createElement("button");
-    likeBtn.className = "sidebar-like-btn";
+    likeBtn.className = "sidebar_right-like-btn";
     likeBtn.innerHTML = icons.heart;
     likeBtn.title = "Guardar en tu biblioteca";
     likeBtn.addEventListener("click", () => {
@@ -221,13 +221,13 @@ export const Sidebar = async (): Promise<HTMLElement> => {
     // ========== ABOUT THE ARTIST SECTION ==========
     if (artistData || trackData?.artists?.[0]) {
         const artistSection = document.createElement("div");
-        artistSection.className = "sidebar-section";
+        artistSection.className = "sidebar_right-section";
 
         const artistSectionHeader = document.createElement("div");
-        artistSectionHeader.className = "sidebar-section-header";
+        artistSectionHeader.className = "sidebar_right-section-header";
 
         const artistSectionTitle = document.createElement("h3");
-        artistSectionTitle.className = "sidebar-section-title";
+        artistSectionTitle.className = "sidebar_right-section-title";
         artistSectionTitle.textContent = "Acerca del artista";
 
         artistSectionHeader.appendChild(artistSectionTitle);
@@ -235,32 +235,32 @@ export const Sidebar = async (): Promise<HTMLElement> => {
 
         // Artist card
         const artistCard = document.createElement("div");
-        artistCard.className = "sidebar-artist-card";
+        artistCard.className = "sidebar_right-artist-card";
 
         const artistImg = document.createElement("img");
-        artistImg.id = "sidebar-artist-img";
-        artistImg.className = "sidebar-artist-image";
+        artistImg.id = "sidebar_right-artist-img";
+        artistImg.className = "sidebar_right-artist-image";
         artistImg.src = artistData?.images?.[0]?.url || defaultArtistImage;
         artistImg.alt = artistData?.name || trackData?.artists?.[0]?.name || "";
 
         const artistInfo = document.createElement("div");
-        artistInfo.className = "sidebar-artist-info";
+        artistInfo.className = "sidebar_right-artist-info";
 
         const artistSectionName = document.createElement("p");
-        artistSectionName.id = "sidebar-artist-section-name";
-        artistSectionName.className = "sidebar-artist-name";
+        artistSectionName.id = "sidebar_right-artist-section-name";
+        artistSectionName.className = "sidebar_right-artist-name";
         artistSectionName.textContent = artistData?.name || trackData?.artists?.[0]?.name || "";
 
         const followersCount = document.createElement("p");
-        followersCount.id = "sidebar-artist-followers";
-        followersCount.className = "sidebar-artist-followers";
+        followersCount.id = "sidebar_right-artist-followers";
+        followersCount.className = "sidebar_right-artist-followers";
         followersCount.textContent = artistData ? `${formatNumber(artistData.followers?.total || 0)} seguidores` : "";
 
         artistInfo.appendChild(artistSectionName);
         artistInfo.appendChild(followersCount);
 
         const followBtn = document.createElement("button");
-        followBtn.className = "sidebar-follow-btn";
+        followBtn.className = "sidebar_right-follow-btn";
         followBtn.textContent = "Seguir";
         followBtn.addEventListener("click", () => {
             followBtn.classList.toggle("following");
@@ -277,17 +277,17 @@ export const Sidebar = async (): Promise<HTMLElement> => {
 
     // ========== CREDITS SECTION ==========
     const creditsSection = document.createElement("div");
-    creditsSection.className = "sidebar-section";
+    creditsSection.className = "sidebar_right-section";
 
     const creditsSectionHeader = document.createElement("div");
-    creditsSectionHeader.className = "sidebar-section-header";
+    creditsSectionHeader.className = "sidebar_right-section-header";
 
     const creditsSectionTitle = document.createElement("h3");
-    creditsSectionTitle.className = "sidebar-section-title";
+    creditsSectionTitle.className = "sidebar_right-section-title";
     creditsSectionTitle.textContent = "Créditos";
 
     const creditsLink = document.createElement("span");
-    creditsLink.className = "sidebar-section-link";
+    creditsLink.className = "sidebar_right-section-link";
     creditsLink.textContent = "Mostrar todo";
 
     creditsSectionHeader.appendChild(creditsSectionTitle);
@@ -296,19 +296,19 @@ export const Sidebar = async (): Promise<HTMLElement> => {
 
     // Add credits items
     const creditsContainer = document.createElement("div");
-    creditsContainer.className = "sidebar-credits";
+    creditsContainer.className = "sidebar_right-credits";
 
     // Main artist credit
     if (trackData?.artists?.[0]) {
         const artistCredit = document.createElement("div");
-        artistCredit.className = "sidebar-credit-item";
+        artistCredit.className = "sidebar_right-credit-item";
 
         const artistRole = document.createElement("span");
-        artistRole.className = "sidebar-credit-role";
+        artistRole.className = "sidebar_right-credit-role";
         artistRole.textContent = "Artista principal";
 
         const artistCreditName = document.createElement("span");
-        artistCreditName.className = "sidebar-credit-name";
+        artistCreditName.className = "sidebar_right-credit-name";
         artistCreditName.textContent = trackData.artists[0].name;
 
         artistCredit.appendChild(artistRole);
@@ -319,14 +319,14 @@ export const Sidebar = async (): Promise<HTMLElement> => {
     // Album credit
     if (trackData?.album?.name) {
         const albumCredit = document.createElement("div");
-        albumCredit.className = "sidebar-credit-item";
+        albumCredit.className = "sidebar_right-credit-item";
 
         const albumRole = document.createElement("span");
-        albumRole.className = "sidebar-credit-role";
+        albumRole.className = "sidebar_right-credit-role";
         albumRole.textContent = "Álbum";
 
         const albumCreditName = document.createElement("span");
-        albumCreditName.className = "sidebar-credit-name";
+        albumCreditName.className = "sidebar_right-credit-name";
         albumCreditName.textContent = trackData.album.name;
 
         albumCredit.appendChild(albumRole);
@@ -337,55 +337,55 @@ export const Sidebar = async (): Promise<HTMLElement> => {
     creditsSection.appendChild(creditsContainer);
     content.appendChild(creditsSection);
 
-    // Assemble sidebar
-    sidebar.appendChild(header);
-    sidebar.appendChild(content);
+    // Assemble sidebar_right
+    sidebar_right.appendChild(header);
+    sidebar_right.appendChild(content);
 
     // ========== COLLAPSED TOGGLE BUTTON ==========
-    // This shows when sidebar is collapsed to allow reopening
+    // This shows when sidebar_right is collapsed to allow reopening
     const collapsedToggle = document.createElement("div");
-    collapsedToggle.className = "sidebar-collapsed-toggle";
+    collapsedToggle.className = "sidebar_right-collapsed-toggle";
 
     // Mini cover preview
     const collapsedCover = document.createElement("img");
-    collapsedCover.id = "sidebar-collapsed-cover";
-    collapsedCover.className = "sidebar-collapsed-cover";
+    collapsedCover.id = "sidebar_right-collapsed-cover";
+    collapsedCover.className = "sidebar_right-collapsed-cover";
     collapsedCover.src = trackData?.album?.images?.[0]?.url || defaultCover;
     collapsedCover.alt = "Expandir panel";
-    collapsedCover.addEventListener("click", toggleSidebar);
+    collapsedCover.addEventListener("click", togglesidebar_right);
 
     const expandBtn = document.createElement("button");
-    expandBtn.className = "sidebar-toggle-btn";
+    expandBtn.className = "sidebar_right-toggle-btn";
     expandBtn.innerHTML = `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M11.03 3.47a.75.75 0 0 1 0 1.06L8.56 7H14.5a.75.75 0 0 1 0 1.5H8.56l2.47 2.47a.75.75 0 1 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 0z"/></svg>`;
     expandBtn.title = "Mostrar panel de reproducción";
-    expandBtn.addEventListener("click", toggleSidebar);
+    expandBtn.addEventListener("click", togglesidebar_right);
 
     collapsedToggle.appendChild(collapsedCover);
     collapsedToggle.appendChild(expandBtn);
 
-    // Create wrapper to hold both sidebar and collapsed toggle
+    // Create wrapper to hold both sidebar_right and collapsed toggle
     const wrapper = document.createDocumentFragment();
-    wrapper.appendChild(sidebar);
+    wrapper.appendChild(sidebar_right);
     wrapper.appendChild(collapsedToggle);
 
     // Return the wrapper as a container div
     const container = document.createElement("div");
-    container.className = "sidebar-wrapper";
-    container.appendChild(sidebar);
+    container.className = "sidebar_right-wrapper";
+    container.appendChild(sidebar_right);
     container.appendChild(collapsedToggle);
 
     return container;
 };
 
 // Export for external use
-export const isSidebarVisible = (): boolean => sidebarVisible;
-export const setSidebarVisible = (visible: boolean): void => {
-    sidebarVisible = visible;
-    const sidebar = document.querySelector('.now-playing-sidebar');
-    const collapsedToggle = document.querySelector('.sidebar-collapsed-toggle');
+export const issidebar_rightVisible = (): boolean => sidebar_rightVisible;
+export const setsidebar_rightVisible = (visible: boolean): void => {
+    sidebar_rightVisible = visible;
+    const sidebar_right = document.querySelector('.now-playing-sidebar_right');
+    const collapsedToggle = document.querySelector('.sidebar_right-collapsed-toggle');
 
-    if (sidebar) {
-        sidebar.classList.toggle('collapsed', !visible);
+    if (sidebar_right) {
+        sidebar_right.classList.toggle('collapsed', !visible);
     }
     if (collapsedToggle) {
         collapsedToggle.classList.toggle('visible', !visible);

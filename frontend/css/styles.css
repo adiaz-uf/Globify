@@ -112,7 +112,7 @@ body {
   overflow: hidden;
 }
 
-/* App layout container (main + sidebar) */
+/* App layout container (main + sidebar_right) */
 .app-layout {
   display: flex;
   flex: 1;
