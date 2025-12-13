@@ -3,6 +3,7 @@ import { redirectToSpotifyLogin, handleLoginCallback, isAuthenticated, logout } 
 import { Navbar, updateNavbarActiveState, MobileTabbar, updateMobileTabbarActiveState } from './views/components/Navbar.js';
 import { Footer } from './views/components/Footer.js';
 import { Sidebar_right } from './views/components/Sidebar_right.js';
+import { Sidebar } from './views/components/Sidebar.js';
 
 async function initApp() {
     console.log('initApp called');
@@ -91,6 +92,13 @@ async function renderAuthenticatedApp() {
     if (navbarContainer) {
         navbarContainer.innerHTML = '';
         navbarContainer.appendChild(Navbar());
+    }
+
+    // Insert Sidebar component into container
+    const sidebarContainer = document.getElementById('sidebar-container');
+    if (sidebarContainer) {
+        sidebarContainer.innerHTML = '';
+        sidebarContainer.appendChild(Sidebar());
     }
 
     // Insert Footer/Player component into container

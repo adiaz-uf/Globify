@@ -14,6 +14,10 @@ const routes: Record<string, RouteHandler> = {
     "/profile": async () => {
         const module = await import("@/views/pages/ProfilePage.js");
         return module.ProfilePage();
+    },
+    "/liked": async () => {
+        const module = await import("@/views/pages/SavedSongsPage.js");
+        return module.SavedSongsPage();
     }
 };
 

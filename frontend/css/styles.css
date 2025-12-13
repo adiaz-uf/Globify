@@ -55,6 +55,7 @@
   --nav-width-desktop: 240px;
 
   /* Radius */
+  --border-radius-s: 4px;
   --border-radius-m: 8px;
   --border-radius-pill: 500px;
 
@@ -117,7 +118,6 @@ body {
   display: flex;
   flex: 1;
   margin-top: var(--header-height);
-  margin-bottom: var(--player-height-desktop);
   overflow: hidden;
   gap: var(--spacing-s);
   padding: var(--spacing-s);
@@ -146,6 +146,7 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   border-radius: var(--border-radius-m);
+  background-color: var(--background-tinted-base);
 }
 
 /* Hide scrollbar on view-container but keep functionality */

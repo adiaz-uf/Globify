@@ -13,7 +13,8 @@
 
 .playlist-banner {
     position: relative;
-    padding: var(--spacing-xl) var(--spacing-l);
+    padding: 32px;
+    padding-top: 80px;
     min-height: 340px;
     display: flex;
     align-items: flex-end;
