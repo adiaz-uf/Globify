@@ -73,6 +73,12 @@ export const updatesidebar_right = async (trackData: any): Promise<void> => {
         collapsedCoverEl.src = coverUrl;
     }
 
+    // Update header title (album name)
+    const headerTitleEl = document.getElementById('sidebar_right-header-title');
+    if (headerTitleEl) {
+        headerTitleEl.textContent = trackData.album?.name || 'Reproduciendo ahora';
+    }
+
     // Update track name
     const trackNameEl = document.getElementById('sidebar_right-track-name');
     if (trackNameEl) {
@@ -83,6 +89,17 @@ export const updatesidebar_right = async (trackData: any): Promise<void> => {
     const artistNameEl = document.getElementById('sidebar_right-artist-name');
     if (artistNameEl) {
         artistNameEl.textContent = trackData.artists?.map((a: any) => a.name).join(', ') || 'Unknown Artist';
+    }
+
+    // Update credits section
+    const creditArtistEl = document.getElementById('sidebar_right-credit-artist');
+    if (creditArtistEl) {
+        creditArtistEl.textContent = trackData.artists?.[0]?.name || '';
+    }
+
+    const creditAlbumEl = document.getElementById('sidebar_right-credit-album');
+    if (creditAlbumEl) {
+        creditAlbumEl.textContent = trackData.album?.name || '';
     }
 
     // Fetch artist data for the artist section
@@ -147,6 +164,7 @@ export const Sidebar_right = async (): Promise<HTMLElement> => {
     header.className = "sidebar_right-header";
 
     const title = document.createElement("span");
+    title.id = "sidebar_right-header-title";
     title.className = "sidebar_right-title";
     title.textContent = trackData?.album?.name || "Reproduciendo ahora";
 
@@ -299,40 +317,38 @@ export const Sidebar_right = async (): Promise<HTMLElement> => {
     creditsContainer.className = "sidebar_right-credits";
 
     // Main artist credit
-    if (trackData?.artists?.[0]) {
-        const artistCredit = document.createElement("div");
-        artistCredit.className = "sidebar_right-credit-item";
+    const artistCredit = document.createElement("div");
+    artistCredit.className = "sidebar_right-credit-item";
 
-        const artistRole = document.createElement("span");
-        artistRole.className = "sidebar_right-credit-role";
-        artistRole.textContent = "Artista principal";
+    const artistRole = document.createElement("span");
+    artistRole.className = "sidebar_right-credit-role";
+    artistRole.textContent = "Artista principal";
 
-        const artistCreditName = document.createElement("span");
-        artistCreditName.className = "sidebar_right-credit-name";
-        artistCreditName.textContent = trackData.artists[0].name;
+    const artistCreditName = document.createElement("span");
+    artistCreditName.id = "sidebar_right-credit-artist";
+    artistCreditName.className = "sidebar_right-credit-name";
+    artistCreditName.textContent = trackData?.artists?.[0]?.name || '';
 
-        artistCredit.appendChild(artistRole);
-        artistCredit.appendChild(artistCreditName);
-        creditsContainer.appendChild(artistCredit);
-    }
+    artistCredit.appendChild(artistRole);
+    artistCredit.appendChild(artistCreditName);
+    creditsContainer.appendChild(artistCredit);
 
     // Album credit
-    if (trackData?.album?.name) {
-        const albumCredit = document.createElement("div");
-        albumCredit.className = "sidebar_right-credit-item";
+    const albumCredit = document.createElement("div");
+    albumCredit.className = "sidebar_right-credit-item";
 
-        const albumRole = document.createElement("span");
-        albumRole.className = "sidebar_right-credit-role";
-        albumRole.textContent = "Álbum";
+    const albumRole = document.createElement("span");
+    albumRole.className = "sidebar_right-credit-role";
+    albumRole.textContent = "Álbum";
 
-        const albumCreditName = document.createElement("span");
-        albumCreditName.className = "sidebar_right-credit-name";
-        albumCreditName.textContent = trackData.album.name;
+    const albumCreditName = document.createElement("span");
+    albumCreditName.id = "sidebar_right-credit-album";
+    albumCreditName.className = "sidebar_right-credit-name";
+    albumCreditName.textContent = trackData?.album?.name || '';
 
-        albumCredit.appendChild(albumRole);
-        albumCredit.appendChild(albumCreditName);
-        creditsContainer.appendChild(albumCredit);
-    }
+    albumCredit.appendChild(albumRole);
+    albumCredit.appendChild(albumCreditName);
+    creditsContainer.appendChild(albumCredit);
 
     creditsSection.appendChild(creditsContainer);
     content.appendChild(creditsSection);

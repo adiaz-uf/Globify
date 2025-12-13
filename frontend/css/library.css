@@ -1,0 +1,130 @@
+/* ========================================
+   LIBRARY PAGE - MOBILE
+   ======================================== */
+
+.library-page {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    min-height: 100%;
+}
+
+/* Header */
+.library-header {
+    padding: 8px 0 16px;
+}
+
+.library-page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* Content */
+.library-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Loading/Error states */
+.library-loading,
+.library-error {
+    color: var(--text-subdued);
+    padding: 24px;
+    text-align: center;
+}
+
+.library-error {
+    color: var(--text-negative);
+}
+
+/* Playlist items */
+.library-page-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.library-page-item:hover {
+    background-color: var(--bg-highlight);
+}
+
+.library-page-item:active {
+    background-color: var(--bg-press);
+}
+
+/* Playlist image */
+.library-page-item-image {
+    width: 56px;
+    height: 56px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+/* Liked songs special icon */
+.library-page-item-liked {
+    width: 56px;
+    height: 56px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #450af5 0%, #8e8ee5 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.library-page-item-liked svg {
+    width: 24px;
+    height: 24px;
+    fill: #fff;
+}
+
+/* Item info */
+.library-page-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.library-page-item-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.library-page-item-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-subdued);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Arrow icon */
+.library-page-item-arrow {
+    width: 16px;
+    height: 16px;
+    fill: var(--text-subdued);
+    flex-shrink: 0;
+}
+
+/* ========================================
+   DESKTOP - Hide this page, use sidebar  
+   ======================================== */
+@media (min-width: 769px) {
+    .library-page {
+        display: none;
+    }
+}

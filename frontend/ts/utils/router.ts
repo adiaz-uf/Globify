@@ -18,6 +18,10 @@ const routes: Record<string, RouteHandler> = {
     "/liked": async () => {
         const module = await import("@/views/pages/SavedSongsPage.js");
         return module.SavedSongsPage();
+    },
+    "/library": async () => {
+        const module = await import("@/views/pages/LibraryPage.js");
+        return module.LibraryPage();
     }
 };
 
