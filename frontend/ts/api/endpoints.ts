@@ -84,4 +84,17 @@ export const SpotifyEndpoints = {
     // Set volume
     // Usage: PUT with query param ?volume_percent=0-100
     volume: '/me/player/volume',
+
+    // === USER TOP ITEMS ===
+    // Get user's top artists (time_range: short_term = ~4 weeks, medium_term = ~6 months, long_term = years)
+    topArtists: (limit: number = 6, timeRange: string = 'short_term') =>
+        `/me/top/artists?limit=${limit}&time_range=${timeRange}`,
+
+    // Get user's top tracks
+    topTracks: (limit: number = 6, timeRange: string = 'short_term') =>
+        `/me/top/tracks?limit=${limit}&time_range=${timeRange}`,
+
+    // === USER FOLLOWING ===
+    // Get artists followed by the current user
+    followingArtists: (limit: number = 6) => `/me/following?type=artist&limit=${limit}`,
 };

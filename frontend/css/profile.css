@@ -15,7 +15,7 @@
 /* ===== PROFILE HEADER ===== */
 .profile-header {
     position: relative;
-    padding: 80px var(--spacing-l) var(--spacing-l);
+    padding: 40px var(--spacing-l) var(--spacing-l);
     background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
 }
 
@@ -60,6 +60,12 @@
     width: 100px;
     height: 100px;
     color: var(--text-subdued);
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .profile-avatar-container:hover .profile-avatar {
@@ -115,7 +121,7 @@
 }
 
 .profile-name {
-    font-size: clamp(2rem, 8vw, 6rem);
+    font-size: clamp(1rem, 8vw, 2rem);
     font-weight: 900;
     color: var(--text-base);
     margin: var(--spacing-s) 0;
@@ -235,11 +241,84 @@
     background: rgba(255, 255, 255, 0.1);
 }
 
-/* ===== ITEMS GRID ===== */
+/* ===== CAROUSEL NAVIGATION ===== */
+.carousel-wrapper {
+    position: relative;
+    /* Create context for absolute arrows */
+    margin: 0 calc(var(--spacing-l) * -1);
+    padding: 0 var(--spacing-l);
+}
+
+/* DEBUG: CAROUSEL ARROWS RESTORED */
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) scale(1);
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(40, 40, 40, 0.9);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-base);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    transition: all 0.2s ease;
+    opacity: 0;
+}
+
+/* Position arrows correctly */
+.carousel-arrow-left {
+    left: var(--spacing-m);
+}
+
+.carousel-arrow-right {
+    right: var(--spacing-m);
+}
+
+/* Show arrows when hovering the wrapper */
+.carousel-wrapper:hover .carousel-arrow:not(.hidden) {
+    opacity: 1 !important;
+}
+
+.carousel-arrow:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-arrow svg {
+    width: 20px;
+    height: 20px;
+}
+
+.carousel-arrow.hidden {
+    display: none;
+    /* Completely hide unavailable directions */
+}
+
+/* ===== ITEMS CAROUSEL ===== */
 .profile-items-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    display: flex;
     gap: var(--spacing-m);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    padding-bottom: var(--spacing-s);
+    /* Hide scrollbar but keep functionality */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.profile-items-grid::-webkit-scrollbar {
+    display: none;
+}
+
+/* Fixed width for carousel cards */
+.profile-items-grid .profile-item-card {
+    flex: 0 0 180px;
+    min-width: 180px;
 }
 
 /* ===== ITEM CARD ===== */
@@ -280,6 +359,12 @@
 .item-emoji {
     font-size: 4rem;
     filter: grayscale(0);
+}
+
+.item-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Play Button on Item */
@@ -380,7 +465,7 @@
     }
 
     .profile-name {
-        font-size: 2.5rem;
+        font-size: 1.5rem;
     }
 
     .profile-stats {
@@ -423,7 +508,7 @@
     }
 
     .profile-name {
-        font-size: 2rem;
+        font-size: 1rem;
     }
 
     .profile-section {
