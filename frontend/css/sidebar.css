@@ -2,8 +2,9 @@
    SIDEBAR STYLES
    ========================================= */
 #sidebar-container {
-  margin-top: var(--header-height);
-
+  /* margin-top removed to align with other containers */
+  border-radius: var(--border-radius-m);
+  overflow: hidden;
 }
 
 .sidebar {

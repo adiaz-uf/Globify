@@ -5,15 +5,20 @@
     display: flex;
     gap: var(--spacing-s);
     padding: var(--spacing-s);
+    margin-top: var(--header-height);
     height: calc(100vh - var(--player-height-desktop, 90px));
     overflow: hidden;
+    /* clip children to border radius */
+    border-radius: var(--border-radius-m);
+    background: var(--background-base);
 }
 
 .main-content {
     flex: 1;
-    overflow-y: auto;
-    border-radius: var(--border-radius-m);
-    background: var(--background-base);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
 }
 
 /* =========================================

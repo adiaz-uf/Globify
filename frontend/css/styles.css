@@ -146,7 +146,7 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   border-radius: var(--border-radius-m);
-  background-color: var(--background-tinted-base);
+  background-color: var(--bg-elevated-base);
 }
 
 /* Hide scrollbar on view-container but keep functionality */
