@@ -4,9 +4,9 @@
 .app-body {
     display: flex;
     gap: var(--spacing-s);
-    padding: var(--spacing-s);
+    padding-inline: var(--spacing-s);
     margin-top: var(--header-height);
-    height: calc(100vh - var(--player-height-desktop, 90px));
+    height: calc(100vh - var(--header-height) - var(--player-height-desktop, 90px));
     overflow: hidden;
     /* clip children to border radius */
     border-radius: var(--border-radius-m);
@@ -195,11 +195,11 @@
 }
 
 .carousel-arrow-prev {
-    left: -8px;
+    left: 16px;
 }
 
 .carousel-arrow-next {
-    right: -8px;
+    right: 16px;
 }
 
 .carousel-wrapper:hover .carousel-arrow {
@@ -369,6 +369,7 @@
     line-height: 1.4;
     margin: 0;
     display: -webkit-box;
+    line-clamp: 2;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;

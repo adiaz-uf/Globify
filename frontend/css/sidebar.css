@@ -8,13 +8,13 @@
 }
 
 .sidebar {
-  width: 280px;
+  width: 320px;
   height: 100%;
   background: var(--bg-elevated-base);
   border-radius: var(--border-radius-m);
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-s);
+  padding: var(--spacing-m);
   gap: var(--spacing-s);
   transition: width 0.3s ease;
   overflow-y: auto;
@@ -90,7 +90,7 @@
 
 .sidebar-btn:hover {
   color: var(--text-base);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);;
 }
 
 .sidebar-btn svg {
@@ -175,8 +175,6 @@
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-m);
-
 }
 
 .library-item {
@@ -185,11 +183,13 @@
   gap: var(--spacing-m);
   border-radius: var(--border-radius-s);
   cursor: pointer;
+  padding: 0.5em;
   transition: background 0.2s ease;
 }
 
 .library-item:hover {
   background: rgba(255, 255, 255, 0.1);
+  padding: 0.5em;
 }
 
 .library-item-image {

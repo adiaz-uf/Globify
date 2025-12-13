@@ -9,7 +9,6 @@
     right: 0;
     height: var(--player-height-desktop);
     background-color: var(--bg-base);
-    border-top: 1px solid var(--bg-highlight);
     display: flex;
     align-items: center;
     justify-content: space-between;
