@@ -3,6 +3,7 @@ import { ActionButtons } from "@/views/components/PlaylistDetails/ActionButtons.
 import { TrackList } from "@/views/components/PlaylistDetails/TrackList.js";
 import { spotifyApiCall } from "@/api/spotifyClient.js";
 import { SpotifyEndpoints } from "@/api/endpoints.js";
+import { playPlaylist } from "@/views/components/Footer.js";
 
 interface PlaylistDetails {
     id: string;
@@ -23,6 +24,9 @@ export const PlaylistPage = async (playlistId: string) => {
 
     // Loading state
     container.innerHTML = '<p style="color: var(--text-subdued); padding: 2rem;">Cargando playlist...</p>';
+
+    // Create Spotify URI for the playlist
+    const playlistUri = `spotify:playlist:${playlistId}`;
 
     try {
         // Fetch playlist details
@@ -50,11 +54,24 @@ export const PlaylistPage = async (playlistId: string) => {
             totalTracks: playlist.tracks.total
         }));
 
-        // Add Action Buttons
-        container.appendChild(ActionButtons());
+        // Add Action Buttons with playback handlers
+        container.appendChild(ActionButtons({
+            onPlayAll: () => {
+                playPlaylist(playlistUri);
+            },
+            onShuffle: async () => {
+                // Enable shuffle first, then play
+                try {
+                    await spotifyApiCall(`${SpotifyEndpoints.shuffle}?state=true`, 'PUT');
+                    playPlaylist(playlistUri);
+                } catch (error) {
+                    console.error('Error enabling shuffle:', error);
+                }
+            }
+        }));
 
-        // Add Track List
-        container.appendChild(TrackList(tracksData.items));
+        // Add Track List with playlistId for track playback
+        container.appendChild(TrackList(tracksData.items, playlistId));
 
     } catch (error) {
         console.error('Error loading playlist:', error);

@@ -3,6 +3,7 @@ import { SpotifyEndpoints } from "@/api/endpoints.js";
 import { Banner } from "@/views/components/PlaylistDetails/Banner.js";
 import { ActionButtons } from "@/views/components/PlaylistDetails/ActionButtons.js";
 import { TrackList } from "@/views/components/PlaylistDetails/TrackList.js";
+import { playLikedSongs } from "@/views/components/Footer.js";
 
 interface SavedTrack {
     track: {
@@ -67,13 +68,29 @@ export const SavedSongsPage = async () => {
         }
 
         page.appendChild(banner);
-        page.appendChild(ActionButtons());
+
+        // Action buttons with playback handlers
+        page.appendChild(ActionButtons({
+            onPlayAll: () => {
+                playLikedSongs();
+            },
+            onShuffle: async () => {
+                // Enable shuffle first, then play liked songs
+                try {
+                    await spotifyApiCall(`${SpotifyEndpoints.shuffle}?state=true`, 'PUT');
+                    playLikedSongs();
+                } catch (error) {
+                    console.error('Error enabling shuffle:', error);
+                }
+            }
+        }));
 
         // Format tracks for TrackList component
         const tracks = data.items.map(item => ({
             track: item.track
         }));
 
+        // Pass undefined for playlistId - TrackList will use liked songs collection
         page.appendChild(TrackList(tracks));
 
     } catch (error) {

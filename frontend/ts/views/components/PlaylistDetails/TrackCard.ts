@@ -6,6 +6,7 @@ interface TrackProps {
     albumImage: string;
     duration: string;
     isLiked?: boolean;
+    onPlay?: () => void;
 }
 
 export const TrackCard = (props: TrackProps) => {
@@ -40,6 +41,26 @@ export const TrackCard = (props: TrackProps) => {
         </div>
     `;
 
+    // Add click handler to entire track card for playback
+    if (props.onPlay) {
+        track.style.cursor = 'pointer';
+        track.addEventListener('click', (e) => {
+            // Don't trigger if clicking on the like button
+            const target = e.target as HTMLElement;
+            if (!target.closest('.track-like')) {
+                props.onPlay!();
+            }
+        });
+
+        // Also add handler to the play button specifically
+        const playBtn = track.querySelector('.track-play-btn');
+        if (playBtn) {
+            playBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                props.onPlay!();
+            });
+        }
+    }
+
     return track;
 }
-

@@ -1,8 +1,10 @@
 import { TrackCard } from "./TrackCard.js";
+import { playTrackInContext, playLikedSongsTrack } from "@/views/components/Footer.js";
 
 interface Track {
     track: {
         id: string;
+        uri?: string;
         name: string;
         artists: { name: string }[];
         album: {
@@ -19,9 +21,17 @@ function formatDuration(ms: number): string {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
-export const TrackList = (tracks: Track[]) => {
+/**
+ * TrackList component
+ * @param tracks - Array of tracks to display
+ * @param playlistId - Optional playlist ID. If not provided, tracks are treated as liked songs
+ */
+export const TrackList = (tracks: Track[], playlistId?: string) => {
     const container = document.createElement('div');
     container.classList.add('track-list');
+
+    // Create Spotify URI for the playlist (if provided)
+    const playlistUri = playlistId ? `spotify:playlist:${playlistId}` : null;
 
     // Header
     const header = document.createElement('div');
@@ -51,7 +61,16 @@ export const TrackList = (tracks: Track[]) => {
                 album: item.track.album.name,
                 albumImage: item.track.album.images?.[0]?.url || 'https://placehold.co/40x40/333/white?text=No',
                 duration: formatDuration(item.track.duration_ms),
-                isLiked: false
+                isLiked: false,
+                onPlay: () => {
+                    if (playlistUri) {
+                        // Play from playlist context
+                        playTrackInContext(playlistUri, index);
+                    } else {
+                        // Play from liked songs collection
+                        playLikedSongsTrack(index);
+                    }
+                }
             });
             trackContainer.appendChild(trackCard);
         }

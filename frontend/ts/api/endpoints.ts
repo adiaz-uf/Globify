@@ -97,4 +97,9 @@ export const SpotifyEndpoints = {
     // === USER FOLLOWING ===
     // Get artists followed by the current user
     followingArtists: (limit: number = 6) => `/me/following?type=artist&limit=${limit}`,
+
+    // === PLAYBACK CONTEXT ===
+    // Start playback with specific context (playlist/album) or specific track URIs
+    // Usage: PUT with body { context_uri: "spotify:playlist:xxx" } or { uris: ["spotify:track:xxx"], offset: { position: 0 } }
+    playContext: '/me/player/play',
 };

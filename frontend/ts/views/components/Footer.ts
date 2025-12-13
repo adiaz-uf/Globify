@@ -593,3 +593,71 @@ export const stopPlayerStatePolling = () => {
         pollingInterval = null;
     }
 };
+
+// ========== EXTERNAL PLAYBACK FUNCTIONS ==========
+/**
+ * Play a specific track within a playlist context
+ * @param playlistUri - The Spotify URI of the playlist (e.g., "spotify:playlist:xxxxx")
+ * @param trackIndex - The index of the track to start playing (0-based)
+ */
+export const playTrackInContext = async (playlistUri: string, trackIndex: number): Promise<void> => {
+    try {
+        await spotifyApiCall(SpotifyEndpoints.playContext, 'PUT', {
+            context_uri: playlistUri,
+            offset: { position: trackIndex }
+        });
+        // Refresh player state after starting playback
+        setTimeout(() => refreshPlayerState(), 300);
+    } catch (error) {
+        console.error('Error playing track in context:', error);
+    }
+};
+
+/**
+ * Play a playlist from the beginning
+ * @param playlistUri - The Spotify URI of the playlist (e.g., "spotify:playlist:xxxxx")
+ */
+export const playPlaylist = async (playlistUri: string): Promise<void> => {
+    try {
+        await spotifyApiCall(SpotifyEndpoints.playContext, 'PUT', {
+            context_uri: playlistUri
+        });
+        // Refresh player state after starting playback
+        setTimeout(() => refreshPlayerState(), 300);
+    } catch (error) {
+        console.error('Error playing playlist:', error);
+    }
+};
+
+/**
+ * Play a track from the user's liked songs collection
+ * @param trackIndex - The index of the track to start playing (0-based)
+ */
+export const playLikedSongsTrack = async (trackIndex: number): Promise<void> => {
+    try {
+        // Use the special liked songs collection URI
+        await spotifyApiCall(SpotifyEndpoints.playContext, 'PUT', {
+            context_uri: 'spotify:user:me:collection',
+            offset: { position: trackIndex }
+        });
+        // Refresh player state after starting playback
+        setTimeout(() => refreshPlayerState(), 300);
+    } catch (error) {
+        console.error('Error playing liked songs track:', error);
+    }
+};
+
+/**
+ * Play the user's liked songs collection from the beginning
+ */
+export const playLikedSongs = async (): Promise<void> => {
+    try {
+        await spotifyApiCall(SpotifyEndpoints.playContext, 'PUT', {
+            context_uri: 'spotify:user:me:collection'
+        });
+        // Refresh player state after starting playback
+        setTimeout(() => refreshPlayerState(), 300);
+    } catch (error) {
+        console.error('Error playing liked songs:', error);
+    }
+};

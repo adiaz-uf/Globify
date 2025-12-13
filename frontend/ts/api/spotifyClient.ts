@@ -116,7 +116,31 @@ export async function spotifyApiCall<T>(
         // If the response has no content (e.g. 204), return null
         if (response.status === 204) return null as T;
 
-        return await response.json();
+        // Some Spotify endpoints return empty or non-JSON responses even with 200
+        const contentType = response.headers.get('content-type');
+        const contentLength = response.headers.get('content-length');
+
+        // Check if response is likely JSON
+        if (contentType && contentType.includes('application/json')) {
+            return await response.json();
+        }
+
+        // If content-length is 0 or very small, it's likely empty
+        if (contentLength === '0' || contentLength === null) {
+            return null as T;
+        }
+
+        // Try to parse as JSON, but handle non-JSON gracefully
+        try {
+            const text = await response.text();
+            if (!text || text.trim() === '') {
+                return null as T;
+            }
+            return JSON.parse(text);
+        } catch {
+            // Response is not JSON, return null (command was successful)
+            return null as T;
+        }
     } catch (error) {
         console.error(`Request to ${url} failed:`, error);
         throw error;

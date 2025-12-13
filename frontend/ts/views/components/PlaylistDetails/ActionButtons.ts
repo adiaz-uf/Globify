@@ -1,4 +1,9 @@
-export const ActionButtons = () => {
+interface ActionButtonsProps {
+    onPlayAll?: () => void;
+    onShuffle?: () => void;
+}
+
+export const ActionButtons = (props: ActionButtonsProps = {}) => {
     const container = document.createElement('div');
     container.classList.add('playlist-actions');
 
@@ -21,6 +26,22 @@ export const ActionButtons = () => {
             </svg>
         </button>
     `;
+
+    // Add click handler for play button
+    const playBtn = container.querySelector('.action-btn-play');
+    if (playBtn && props.onPlayAll) {
+        playBtn.addEventListener('click', () => {
+            props.onPlayAll!();
+        });
+    }
+
+    // Add click handler for shuffle button
+    const shuffleBtn = container.querySelector('.action-btn-shuffle');
+    if (shuffleBtn && props.onShuffle) {
+        shuffleBtn.addEventListener('click', () => {
+            props.onShuffle!();
+        });
+    }
 
     return container;
 }
