@@ -1,5 +1,6 @@
 import { SpotifyEndpoints } from "@/api/endpoints.js";
 import { spotifyApiCall } from "@/api/spotifyClient.js";
+import { updatesidebar_right } from "@/views/components/Sidebar_right.js";
 
 // SVG Icons for player controls
 const icons = {
@@ -93,6 +94,9 @@ let playerState: PlayerState = {
     repeatMode: 'off',
     currentTrack: null,
 };
+
+// Track the current track ID to detect when song changes
+let currentTrackId: string | null = null;
 
 // Callbacks
 let onPlayPause: (() => void) | null = null;
@@ -565,6 +569,13 @@ const refreshPlayerState = async () => {
             } : null;
 
             updatePlayerUI();
+
+            // Update right sidebar only when track changes (not every poll)
+            const newTrackId = currentTrack?.id || null;
+            if (currentTrack && newTrackId !== currentTrackId) {
+                currentTrackId = newTrackId;
+                updatesidebar_right(currentTrack);
+            }
 
             // Update shuffle and repeat button states
             const shuffleBtn = document.querySelector('.control-btn-small:first-child');
