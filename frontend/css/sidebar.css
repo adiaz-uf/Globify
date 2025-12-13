@@ -23,6 +23,8 @@
 
 .sidebar.collapsed {
   width: 72px;
+  padding: var(--spacing-s);
+  /* Reduce padding to fit 48px images */
 }
 
 /* Header */
@@ -90,7 +92,7 @@
 
 .sidebar-btn:hover {
   color: var(--text-base);
-  background: rgba(255, 255, 255, 0.1);;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-btn svg {
@@ -127,7 +129,7 @@
 }
 
 .sidebar-filter:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-filter.active {
@@ -188,8 +190,14 @@
 }
 
 .library-item:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   padding: 0.5em;
+  /* Ensure padding stays consistent on hover */
+}
+
+.sidebar.collapsed .library-item {
+  justify-content: center;
+  padding: 4px;
 }
 
 .library-item-image {
