@@ -1,6 +1,7 @@
 import { spotifyApiCall } from "@/api/spotifyClient.js";
 import { SpotifyEndpoints } from "@/api/endpoints.js";
 import { navigateTo } from "@/utils/router.js";
+import { playTrackUri } from "@/views/components/Footer.js";
 
 interface Track {
     id: string;
@@ -11,6 +12,7 @@ interface Track {
         images: { url: string }[];
     };
     duration_ms: number;
+    uri: string;
 }
 
 interface Artist {
@@ -170,6 +172,10 @@ function renderSearchResults(container: HTMLElement, results: SearchResults, que
 
         const topResultCard = document.createElement("div");
         topResultCard.className = "top-result-card";
+        topResultCard.style.cursor = "pointer";
+        topResultCard.addEventListener("click", () => {
+            if (topTrack.uri) playTrackUri(topTrack.uri);
+        });
 
         const img = document.createElement("img");
         img.className = "top-result-image";
@@ -207,6 +213,10 @@ function renderSearchResults(container: HTMLElement, results: SearchResults, que
         results.tracks.items.filter(track => track !== null).slice(0, 4).forEach(track => {
             const songItem = document.createElement("div");
             songItem.className = "song-item";
+            songItem.style.cursor = "pointer";
+            songItem.addEventListener("click", () => {
+                if (track.uri) playTrackUri(track.uri);
+            });
 
             const img = document.createElement("img");
             img.className = "song-cover";

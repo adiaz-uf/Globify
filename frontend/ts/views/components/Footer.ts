@@ -672,3 +672,19 @@ export const playLikedSongs = async (): Promise<void> => {
         console.error('Error playing liked songs:', error);
     }
 };
+
+/**
+ * Play a specific track by its URI
+ * @param uri - The Spotify URI of the track (e.g., "spotify:track:xxxxx")
+ */
+export const playTrackUri = async (uri: string): Promise<void> => {
+    try {
+        await spotifyApiCall(SpotifyEndpoints.play, 'PUT', {
+            uris: [uri]
+        });
+        // Refresh player state after starting playback
+        setTimeout(() => refreshPlayerState(), 300);
+    } catch (error) {
+        console.error('Error playing track URI:', error);
+    }
+};

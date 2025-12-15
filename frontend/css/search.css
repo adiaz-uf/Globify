@@ -537,3 +537,16 @@
         display: none;
     }
 }
+
+@media (max-width: 431px) {
+    .song-image-wrapper {
+        width: 48px;
+        height: 48px;
+    }
+
+    /* Hide hover overlays on touch devices */
+    .song-play-overlay,
+    .play-button-overlay {
+        display: none !important;
+    }
+}
