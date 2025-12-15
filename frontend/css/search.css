@@ -538,6 +538,92 @@
     }
 }
 
+/* ============================================
+   PLAY BUTTON OVERLAYS
+   ============================================ */
+
+/* Top Result Play Button */
+.play-button-overlay {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--green-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.top-result-card:hover .play-button-overlay {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.play-button-overlay:hover {
+    transform: scale(1.05) translateY(0);
+    background-color: #1fdf64;
+}
+
+.play-button-overlay svg {
+    width: 24px;
+    height: 24px;
+    fill: black;
+    margin-left: 2px;
+}
+
+/* Song Item Play Overlay */
+.song-image-wrapper {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.song-play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.song-item:hover .song-play-overlay {
+    opacity: 1;
+}
+
+.song-play-overlay svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+}
+
+@media (max-width: 431px) {
+    .song-image-wrapper {
+        width: 48px;
+        height: 48px;
+    }
+
+    /* Hide hover overlays on touch devices */
+    .song-play-overlay,
+    .play-button-overlay {
+        display: none !important;
+    }
+}
+
 @media (max-width: 431px) {
     .song-image-wrapper {
         width: 48px;

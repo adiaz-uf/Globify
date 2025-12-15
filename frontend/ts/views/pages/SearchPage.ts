@@ -183,6 +183,12 @@ function renderSearchResults(container: HTMLElement, results: SearchResults, que
         img.alt = topTrack.name;
         topResultCard.appendChild(img);
 
+        // Add Play Button Overlay
+        const playBtn = document.createElement("div");
+        playBtn.className = "play-button-overlay";
+        playBtn.innerHTML = `<svg role="img" height="24" width="24" aria-hidden="true" viewBox="0 0 24 24" data-encore-id="icon"><path d="M7.05 3.606l13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path></svg>`;
+        topResultCard.appendChild(playBtn);
+
         const name = document.createElement("h3");
         name.className = "top-result-name";
         name.textContent = topTrack.name;
@@ -218,11 +224,22 @@ function renderSearchResults(container: HTMLElement, results: SearchResults, que
                 if (track.uri) playTrackUri(track.uri);
             });
 
+            // Image Wrapper with Overlay
+            const imgWrapper = document.createElement("div");
+            imgWrapper.className = "song-image-wrapper";
+
             const img = document.createElement("img");
             img.className = "song-cover";
             img.src = track.album?.images?.[2]?.url || track.album?.images?.[0]?.url || defaultCover;
             img.alt = track.name;
-            songItem.appendChild(img);
+
+            const playOverlay = document.createElement("div");
+            playOverlay.className = "song-play-overlay";
+            playOverlay.innerHTML = `<svg role="img" height="24" width="24" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M7.05 3.606l13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path></svg>`;
+
+            imgWrapper.appendChild(img);
+            imgWrapper.appendChild(playOverlay);
+            songItem.appendChild(imgWrapper);
 
             const info = document.createElement("div");
             info.className = "song-info";
