@@ -9,6 +9,22 @@ Globify is a modern web application that replicates the core functionality and a
 - **Dockerized**: Fully containerized setup using Docker and Nginx.
 - **Development Workflow**: Integrated local development environment with hot-reloading (BrowserSync).
 
+## 📸 Screenshots
+
+<div align="center">
+  <h3>Home</h3>
+  <img src="readme_assets/home.png" alt="Home Page" width="800"/>
+  
+  <h3>Search Functionality</h3>
+  <img src="readme_assets/search.png" alt="Search" width="800"/>
+  <img src="readme_assets/search_2.png" alt="Search Results" width="400"/>
+  <img src="readme_assets/search_3.png" alt="Search Details" width="400"/>
+
+  <h3>Playlist & Profile</h3>
+  <img src="readme_assets/playlist.png" alt="Playlist" width="400"/>
+  <img src="readme_assets/profile.png" alt="Profile" width="400"/>
+</div>
+
 ## 🛠 Technology Stack
 
 - **Frontend**: HTML5, CSS3, TypeScript
