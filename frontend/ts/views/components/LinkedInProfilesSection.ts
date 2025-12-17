@@ -22,7 +22,7 @@ export const LinkedInProfilesSection = () => {
         {
             name: "Alejandro Díaz",
             role: "Developer",
-            imageUrl: "https://placehold.co/400x400/333/white?text=Alex",
+            imageUrl: "/assets/images/Alex.jpg",
             profileUrl: "https://www.linkedin.com/in/alejandro-diaz-ufano/"
         },
         {

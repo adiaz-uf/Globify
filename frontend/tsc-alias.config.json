@@ -1,0 +1,13 @@
+{
+    "resolveFullPaths": false,
+    "verbose": true,
+    "compilerOptions": {
+        "outDir": "./js",
+        "baseUrl": "./ts",
+        "paths": {
+            "@/*": [
+                "*"
+            ]
+        }
+    }
+}

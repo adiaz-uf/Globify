@@ -3,10 +3,10 @@
     "version": "1.0.0",
     "description": "Globify - Spotify Client",
     "scripts": {
-        "build": "tsc && tsc-alias",
-        "watch": "concurrently \"tsc --watch\" \"tsc-alias --watch\"",
+        "build": "tsc && tsc-alias -p tsc-alias.config.json",
+        "watch": "concurrently \"tsc --watch\" \"tsc-alias --watch -p tsc-alias.config.json\"",
         "serve": "npx serve . -l 8080",
-        "dev": "concurrently \"tsc --watch\" \"tsc-alias --watch\" \"browser-sync start --config bs-config.js\""
+        "dev": "concurrently \"tsc --watch\" \"tsc-alias --watch -p tsc-alias.config.json\" \"browser-sync start --config bs-config.js\""
     },
     "devDependencies": {
         "typescript": "^5.3.0",
